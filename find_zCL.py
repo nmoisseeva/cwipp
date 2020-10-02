@@ -19,17 +19,22 @@ from scipy.interpolate import interp1d
 
 #====================INPUT===================
 #import all common project variables
-from config import *
-imp.reload(config) 	#force load each time
+import config
+imp.reload(config)
 import utils
-imp.reload(utlis)
+imp.reload(utils)
 import Plume
+imp.reload(Plume)
+import graphics
+imp.reload(graphics)
 
 trials = 10             #number of times to rerun the model
 testPortion = 0.2       #portion of data to reserve for testing the model
+plot_profiles = 1
 #=================end of input===============
 
-RunList = [i for i in plume.tag if i not in plume.exclude_bad]         #load a list of cases
+# RunList = [i for i in config.tag if i not in config.exclude_bad]         #load a list of cases
+RunList = ['W5F7R4','W5F7R7T']
 runCnt = len(RunList)                                                  #count number of cases
 
 # #storage for variables
@@ -47,110 +52,24 @@ runCnt = len(RunList)                                                  #count nu
 #======================repeat main analysis for all runs first===================
 #loop through all LES cases
 for nCase,Case in enumerate(RunList):
-    csdict = utils.prepCS(Case)      #load data cross-wind integrated smoke and all other data
-    T0 = np.load(plume.wrfdir + 'profT0' + Case + '.npy')    #load initial temperature profile
-    U0 = np.load(plume.wrfdir + 'profU0' + Case + '.npy')    #load intial wind profile
+    csdict = utils.prepCS(Case)      #load cross-wind integrated smoke and all other data
 
-    #get the number of vertical levels available for PM and met variables
-    metlvls = np.arange(0,np.shape(csdict['u'])[1]+1,dz)
-    pmlvls = np.arange(0,np.shape(csdict['pm25'])[1]+1,dz)
-
-    interpT= interp1d(metlvls,T0,fill_value='extrapolate')
-    T0interp = interpT(interpZ)
-
-
-    #mask plume with cutoff value---------------------------------
-    zi = utils.get_zi(T0,dz)                    #calculate BL height
-    zs = zi * BLfrac
+    # #get the number of vertical levels available for PM and met variables
+    # metlvls = np.arange(0,(np.shape(csdict['u'])[1])*dz,dz)
+    # pmlvls = np.arange(0,(np.shape(csdict['pm25'])[1]+1)*dz,dz)
 
     #initalize a plume object
-    plume = Plume(Case,zi,zs)
+    plume = Plume.LESplume(Case,interpZ)
 
     #get quasi-stationary profile
     pm = ma.masked_where(csdict['pm25'][-1,:,:] <= PMcutoff, csdict['pm25'][-1,:,:] ) #mask all non-plume cells
-    plume.get_profile(pm)
+    plume.get_zCL(pm)
 
+    #estimate fire intensity
+    plume.get_I(csdict['ghfx2D'],5000)
 
-    #define heat source ------------------------
-    masked_flux = ma.masked_less_equal(csdict['ghfx2D'],1)    #mask empty fire heat flux cells
-    cs_flux = np.nanmean(masked_flux,1)                         #get mean cross section for each timestep
-    fire = []                                                   #create storage arrage
-    fxmax = np.argmax(cs_flux,axis=1)                           #get location of max heat for each timestep
-    for nP, pt in enumerate(fxmax[plume.ign_over:]):            #excludes steps containing ignition
-        subset = cs_flux[plume.ign_over+nP,pt-plume.wi:pt+plume.wf]     #set averaging window around a maximum
-        fire.append(subset)
-
-    meanFire = np.nanmean(fire,0)                               #calculate mean fire cross section
-    ignited = np.array([i for i in meanFire if i > 0.5])        #consider only cells that have heat flux about 500 W/m2
-    Phi[nCase] = np.trapz(ignited, dx = plume.dx) * 1000 / ( 1.2 * 1005)    #calculate Phi by integrating kinematic heat flux along x (Km2/s)
-    depth[nCase] = len(ignited) * plume.dx
-
-    #calculate injection height variables ---------------------------
-    zCL[nCase] = np.mean(smoothCenterline[1:][stablePMmask])    #injection height is where the centerline is stable and concentration doesn't change
-    zCLidx = np.argmin(abs(interpZ - zCL[nCase]))
-    ziidx = np.argmin(abs(interpZ - zi[nCase]))
-    dT = (T0[1:]-T0[0:-1])/plume.dz                                        #calculate potential temperature change (K)
-
-    zsidx = np.argmin(abs(interpZ - zi[nCase]*BLfrac))
-    sounding[nCase,:] = T0interp
-    dTinterp = (T0interp[1:] - T0interp[0:-1])/zstep
-    gradT0interp[nCase,:] = dTinterp
-    Omega[nCase] = np.trapz(dTinterp[zsidx:zCLidx],dx=zstep)
-    thetaS[nCase] = sounding[nCase,zsidx]
-    thetaCL[nCase] = sounding[nCase,zCLidx]
-
-    w = csdict['w'][-1,:,:]
-    Wctr = np.array([w[nZ, ctrXidx[nZ]] for nZ in range(dimZ)])    #get concentration along the centerline
-    Wmax = np.max(w,1)
-    if Case[-1:]=='T' or Case[-1:]=='E':
-        interpWctr = interp1d(plume.lvltall, Wctr,fill_value='extrapolate')
-        interpWmax = interp1d(plume.lvltall, Wmax,fill_value='extrapolate')
-    else:
-        interpWctr= interp1d(plume.lvl, Wctr,fill_value='extrapolate')
-        interpWmax= interp1d(plume.lvl, Wmax,fill_value='extrapolate')
-    Wctrinterp = interpWctr(interpZ)
-    Wmaxinterp = interpWmax(interpZ)
-
-    #do theta testing
-    temperature = csdict['temp'][-1,:,:]
-    Tctr = np.array([temperature[nZ, ctrXidx[nZ]] for nZ in range(dimZ)])    #get concentration along the centerline
-    Tmax = np.max(temperature,1)
-    if Case[-1:]=='T' or Case[-1:]=='E':
-        interpTctr = interp1d(plume.lvltall, Tctr,fill_value='extrapolate')
-        interpTmax = interp1d(plume.lvltall, Tmax,fill_value='extrapolate')
-    else:
-        interpTctr= interp1d(plume.lvl, Tctr,fill_value='extrapolate')
-        interpTmax= interp1d(plume.lvl, Tmax,fill_value='extrapolate')
-    Tctrinterp = interpTctr(interpZ)
-    Tmaxinterp = interpTctr(interpZ)
-
-    #vertical concentration slice at donwind locations of wmax and qmax
-    plt.figure(figsize=(10,4))
-    plt.suptitle('%s' %Case)
-    plt.subplot(121)
-    ax1 = plt.gca()
-    plt.title('PROFILES OF VERTICAL VELOCITY')
-    plt.plot(Wctrinterp,interpZ,'.-',label='$w_{PMmax}$')
-    plt.plot(Wmaxinterp,interpZ,'k.-',label='$w_{max}$')
-    plt.axhline(y = zi[nCase], ls=':', c='darkgrey', label='zi')
-    plt.axhline(y = zCL[nCase],ls='--', c='red',label='z$_{CL}$')
-    ax1.set(xlabel = 'velocity [m/s]', ylabel='height [m]',ylim = [0,3200] )
-    plt.legend()
-
-    plt.subplot(122)
-    plt.title(r'PLUME vs AMBIENT $\theta$')
-    ax2 = plt.gca()
-    plt.plot(sounding[nCase,:], interpZ, label=r'pre-ignition $\theta$ profile',c='lightblue')
-    # plt.plot(Tctrinterp,interpZ,c = 'orange',label='in-plume T$_{PMmax}$',alpha = 0.5)
-    plt.plot(Tmaxinterp,interpZ,c = 'orange',label=r'in-plume $\theta_{max}$')
-    plt.axhline(y = zi[nCase], ls=':', c='darkgrey', label=r'z$_i$')
-    plt.axhline(y = zCL[nCase],ls='--', c='red',label=r'z$_{CL}$')
-    ax2.set(xlabel = r'$\theta$ [K]', ylabel='height [m]' ,xlim = [285,330],ylim = [0,3200])
-    plt.legend()
-    plt.tight_layout()
-    # plt.show()
-    plt.savefig(plume.figdir + 'profiles/profiles_%s.pdf' %Case)
-    plt.close()
+    if plot_profiles:
+        graphics.plot_profiles(plume, interpZ, csdict['w'][-1,:,:], csdict['temp'][-1,:,:])
 
 
 #======================compare model formulations========================

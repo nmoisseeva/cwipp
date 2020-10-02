@@ -18,7 +18,7 @@ import glob
 
 #paths
 wrfdir = '/Users/nmoisseeva/data/plume/main/interp/'
-figdir = '/Users/nmoisseeva/code/plume/main/figs/'
+figdir = '/Users/nmoisseeva/code/plume/main/clean_code/figs/'
 
 #grid spacing of interpolated LES data
 dz = 40
@@ -38,7 +38,7 @@ exclude_bad = ['W5F4R0','W5F13R0']
 g = 9.81                        #gravity constant
 PMcutoff = 20                   #minimum value for plume edge
 zstep = 20                      #height interpolation step for analysis
-interpZ = np.arange(0, 4001, zstep) #set up interpolated vertical profile 
+interpZ = np.arange(0, 4001, zstep) #set up interpolated vertical profile
 BLfrac = 0.75                   #fraction of BL height to use as reference height z_s (default = 0.75)
 
 
@@ -47,11 +47,12 @@ BLfrac = 0.75                   #fraction of BL height to use as reference heigh
 # lvl = np.arange(0,2800,dz)	 	#vertical levels in m
 # lvltall = np.arange(0,3201,dz)  #vertical levels for *T runs
 
-#
+#fireline configuration
+ign_over = 20                   #number of history intervals exluded from analysis start (corresponding to ignition)
+
 # cs = 10                         #+/- grids for cross-section
 # wi, wf = 25, 375
 # fireline = 4000.,6000.          #fireline start and end in meters
-# ign_over = 20                   #number of history intervals exluded from start
 
 
 
