@@ -32,6 +32,7 @@ RunList = [i for i in config.tag if i not in config.exclude_bad]         #load a
 runCnt = len(RunList)                                                  #count number of cases
 
 #======================perform main analysis for all runs first===================
+print('==========================LES analysis==========================')
 #loop through all LES cases
 all_plumes = []
 for nCase,Case in enumerate(RunList):
@@ -49,23 +50,26 @@ for nCase,Case in enumerate(RunList):
     plume.get_I(csdict['ghfx2D'],5000)
 
 
-
+    #make plots, if necessary
     if config.plot_profiles:
         graphics.plot_profiles(plume,config.interpZ, csdict['w'][-1,:,:], csdict['temp'][-1,:,:])
 
     all_plumes.append(plume)
 
+#plot soundings
+graphics.plot_soundings(all_plumes)
 
 #pickle and save all plume data
 with open('plumes.pkl', 'wb') as f:
     pickle.dump(all_plumes, f)
 
 
-# Getting back the objects:
-with open('plumes.pkl','rb') as f:
-    all_plumes = pickle.load(f)
+# # Getting back the objects:
+# with open('plumes.pkl','rb') as f:
+#     all_plumes = pickle.load(f)
 
 #======================assess model performance========================
+print('Fitting all penetrative plumes using LES zCL')
 #make a list of penetrative plumes
 penetrative_plumes = []
 for plume in all_plumes:
@@ -85,7 +89,6 @@ C, _, _, _ = np.linalg.lstsq(firstGuess, zPrimeTrue)
 C = float(C)
 
 #obtain bias correction factors
-zPrimeModel = C*modelGuess
 zCLmodel, zCLtrue = [],[]
 for plume in penetrative_plumes:
     estimate = C*plume.Tau*plume.wf + plume.zs
@@ -93,80 +96,32 @@ for plume in penetrative_plumes:
     zCLtrue.append(plume.zCL)
 biasFit = linregress(zCLmodel,zCLtrue)
 
-# wStarC = Tau*((g*Phi*(zCL-zS))/(thetaS*zi))**(1/3.)
-# firstGuessArray = wStarC[:,np.newaxis]
-# C, _, _, _ = np.linalg.lstsq(firstGuessArray, zCL-zS)
-# modelGuess = C*wStarC + zS
-# biasFit = linregress(modelGuess,zCL)
 
 #plot model performance
 graphics.injection_model(penetrative_plumes, C, biasFit)
 
-import graphics
-imp.reload(graphics)
-
-# plt.figure()
-# plt.title('MODELLED SMOKE INJECTION HEIGHTS')
-# ax = plt.gca()
-# # plt.scatter(wStarC+zS,zCL,c=plume.read_tag('R',RunList),cmap =plt.cm.tab10)
-# plt.scatter(modelGuess,zCL,c=Phi,cmap =plt.cm.plasma)
-# # ax.set(ylabel = r'$z_{CL}$ [m]', xlabel = r'$C\tau_* \widetilde{w_f} + \frac{3}{4}z_i$ [m]',xlim = [400,3200], ylim = [400,3200])
-# ax.set(ylabel = r'true $z_{CL}$ [m]', xlabel = r'injection model $z_{CL}$ [m]',xlim = [400,3200], ylim = [400,3200])
-# plt.colorbar(label=r'fireline intensity [K m$^2$/s]')
-# # plt.colorbar(label=r'atmospheric profile number')
-# plt.plot(np.sort(modelGuess),biasFit[0]*np.sort(modelGuess)+biasFit[1], color='black', label='linear regression fit')
-# plt.plot(np.sort(modelGuess),np.sort(modelGuess), linestyle = 'dashed', color='grey', label='unity line')
-# plt.legend()
-# plt.savefig(plume.figdir + 'injectionModel/NewInjectionTheory.pdf')
-# plt.show()
-
-
-plt.figure()
-plt.title('PRE-IGNITION ATMOSPHERIC PROFILES')
-leg_handles = []
-Rtag = np.array([i for i in plume.read_tag('R',RunList)])  #list of initialization rounds (different soundings)
-for R in set(Rtag):
-    for Case in sounding[Rtag==R]:
-        lR = plt.plot(Case, interpZ, color='C%s' %R, linewidth=1, label='R%s' %R)
-    leg_handles.extend(lR)
-plt.gca().set(xlabel='potential temperature [K]',ylabel='height [m]',xlim=[280,330],ylim=[0,2800])
-plt.legend(handles=leg_handles)
-plt.savefig(plume.figdir + 'T0profiles.pdf')
-plt.show()
-
 #================dimensionless fit=========================
-R8idx = np.where(plume.read_tag('R', RunList)==8)[0][0]
-exclude_idx = np.ndarray.flatten(np.arange(runCnt)!=R8idx)
+print('Fitting dimensionless groups')
+zStar, HStar, cI = [], [], []
+for plume in penetrative_plumes:
+    if utils.read_tag('R',[plume.name])==8:
+        print('..... skipping %s' %plume.name)
+        continue
+    i_zi = np.nanargmin(abs(config.interpZ - plume.zi))
+    i_zs = np.nanargmin(abs(config.interpZ - plume.zs))
+    i_top = np.nanargmin(abs(config.interpZ - (plume.zi+1000)))
+    baselinedTH = plume.sounding[i_zi:i_top] - plume.sounding[i_zs]
+    GammaFit = linregress(config.interpZ[i_zi:i_top],baselinedTH)
+    Gamma = GammaFit[0]
+    zE = -GammaFit[1]/GammaFit[0]
+    zStar.append((plume.zCL - zE)/plume.zi)
+    estimateH = C**(3/2.)*((plume.THs/(config.g*Gamma**3))**(1/4.)) * np.sqrt(plume.I/plume.zi**3)
+    HStar.append(estimateH)
+    cI.append(plume.I)
 
-
-Gamma = np.empty(len(RunList))* np.nan
-thetaE =  np.empty(len(RunList))* np.nan
-zE = np.empty(len(RunList))* np.nan
-for nCase, Case in enumerate(RunList):
-    ziidx = np.nanargmin(abs(interpZ - zi[nCase]))
-    BLidx = int(ziidx*BLfrac)
-    fittopidx = np.nanargmin(abs(interpZ - 2700))
-    baselinedTheta = sounding[nCase,ziidx:fittopidx] - sounding[nCase,BLidx]
-    GammaFit = linregress(interpZ[ziidx:fittopidx],baselinedTheta)
-    Gamma[nCase] = GammaFit[0]
-    thetaE[nCase] = sounding[nCase,BLidx]
-    zE[nCase] = -GammaFit[1]/GammaFit[0]
-zStar = (zCL - zE)/zi
-# HStar = (3/4.)**(3/2.)*((thetaE/(g*Gamma**3))**(1/4.)) * np.sqrt((3/2.)*Phi/zi**3)
-HStar = C**(3/2.)*((thetaE/(g*Gamma**3))**(1/4.)) * np.sqrt(Phi/zi**3)
-
-
-plt.figure()
-plt.title('DIMENSIONLESS RELATIONSHIP')
-plt.scatter(HStar[exclude_idx],zStar[exclude_idx],c=Phi[exclude_idx],cmap=plt.cm.plasma)
-ax = plt.gca()
-# for i, txt in enumerate(RunList):
-#     ax.annotate(txt, (HStar[i], zStar[i]),fontsize=6)
-plt.gca().set(xlabel = r'$\overline{H}$', ylabel=r'$\overline{z}$')
-plt.colorbar(label=r'fireline intensity [Km$^2$/s]')
-plt.savefig(plume.figdir + 'injectionModel/DimensionlessGroups.pdf')
-plt.show()
-
+imp.reload(graphics)
+#plot dimensionless performance
+graphics.dimensionless_groups(HStar,zStar,cI)
 
 #===========iterative solution===============
 zCLerror = np.empty((runCnt)) * np.nan          #parameterization error [m]

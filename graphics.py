@@ -12,6 +12,7 @@ from matplotlib import ticker
 from scipy.stats import linregress
 from scipy.interpolate import interp1d
 import config
+import utils
 
 def plot_profiles(plume, interpZ, w, T):
     dimZ, dimX = np.shape(w)     #get shape of data
@@ -57,6 +58,34 @@ def plot_profiles(plume, interpZ, w, T):
     plt.savefig(figpath + 'profiles_%s.pdf' %plume.name)
     plt.close()
 
+def plot_soundings(all_plumes):
+
+    #create a storage directory for plots
+    figpath = config.figdir + 'injection/'
+    if not os.path.exists(figpath):
+        os.makedirs(figpath)
+
+    plt.figure()
+    plt.title('PRE-IGNITION ATMOSPHERIC PROFILES')
+    leg_handles = []
+    names_list = []
+    soundings = []
+    for plume in all_plumes:
+        names_list.append(plume.name)
+        soundings.append(plume.sounding)
+
+    Rtag = np.array([i for i in utils.read_tag('R',names_list)])  #list of initialization rounds (different soundings)
+    for R in set(Rtag):
+        print(R)
+        for Case in np.array(soundings)[Rtag==R]:
+            lR = plt.plot(Case, config.interpZ, color='C%s' %R, linewidth=1, label='R%s' %R)
+        leg_handles.extend(lR)
+    plt.gca().set(xlabel='potential temperature [K]',ylabel='height [m]',xlim=[280,330],ylim=[0,2800])
+    plt.legend(handles=leg_handles)
+    plt.savefig(figpath + 'T0profiles.pdf')
+    plt.close()
+
+
 def injection_model(all_plumes,C,biasFit):
 
     #create a storage directory for plots
@@ -84,4 +113,21 @@ def injection_model(all_plumes,C,biasFit):
     plt.plot(np.sort(modelled_array),np.sort(modelled_array), linestyle = 'dashed', color='grey', label='unity line')
     plt.legend()
     plt.savefig(figpath + 'MainInjection_allPlumes.pdf')
+    plt.close()
+
+def dimensionless_groups(HStar,zStar,cI):
+    #create a storage directory for plots
+    figpath = config.figdir + 'injection/'
+    if not os.path.exists(figpath):
+        os.makedirs(figpath)
+
+    plt.figure()
+    plt.title('DIMENSIONLESS RELATIONSHIP')
+    plt.scatter(HStar,zStar,c=cI,cmap=plt.cm.plasma)
+    ax = plt.gca()
+    # for i, txt in enumerate(RunList):
+    #     ax.annotate(txt, (HStar[i], zStar[i]),fontsize=6)
+    plt.gca().set(xlabel = r'$\overline{H}$', ylabel=r'$\overline{z}$')
+    plt.colorbar(label=r'fireline intensity [Km$^2$/s]')
+    plt.savefig(figpath + 'DimensionlessGroups.pdf')
     plt.close()
