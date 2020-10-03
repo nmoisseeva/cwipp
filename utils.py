@@ -20,13 +20,19 @@ import config
 def get_zi(T0,dz):
     r'''
     Retrieve the height of boundary layer top $z_i$, based on gradient of potential temperature lapse rate.
+    ...
 
     Parameters:
-    T0 (ndarray): potential temperature sounding (1D vector)
-    dz (float): vertical grid spacing (m)
+    -----------
+    T0 : ndarray
+        1D array representing potential temperature sounding [K]
+    dz : float
+        vertical grid spacing [m]
 
     Returns:
-    $z_i$ (float): boundary layer height
+    --------
+    $z_i$ : float
+        boundary layer height [m]
     '''
     dT = T0[1:]-T0[0:-1]
     gradT = dT[1:] - dT[0:-1]
@@ -40,13 +46,18 @@ def get_zi(T0,dz):
 def read_tag(condition, RunList):
     r'''
     Extract condition tags from all runs
-
+    ...
     Parameters:
-    Condition (str): Letter corresponding to test condition ('W'/'F'/'R'/'L')
-    RunList (list): list of strings containing plume tags
+    -----------
+    condition : str
+        letter corresponding to test condition ('W'/'F'/'R'/'L')
+    RunList : list
+        list of strings containing plume tags
 
     Returns:
-    $out_array$ (ndarray): 1D array containing condition values for RunList
+    --------
+    out_array : ndarray
+        1D array containing condition values for RunList
     '''
     out_array = []
     for nTag,tag in enumerate(RunList):
@@ -73,11 +84,15 @@ def prepCS(Case):
     Load simulation cross-section; prepare and save pre-ignition potential temperature and horizontal velocity profiles.
 
     Parameters:
-    Case (str): plume name. Assumed naming convention for cross-sectional data: wrfcs_Case.npy, \\
-    containing dictionary keys 'temp' and 'u' for potentail temperature and horizontal velocity, respectively.
+    -----------
+    Case : str
+        plume name; assumed naming convention for cross-sectional data: wrfcs_Case.npy, \\
+        containing dictionary keys 'temp' and 'u' for potentail temperature and horizontal velocity, respectively.
 
     Returns:
-    $csdict$ (dict): dictionary containing cross-sectional plume data
+    --------
+    csdict : dict
+        dictionary containing cross-sectional plume data
     '''
     #load cross section
     cspath = config.wrfdir + 'wrfcs_' + Case + '.npy'

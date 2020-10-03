@@ -15,9 +15,8 @@ from scipy.stats import linregress
 from scipy.optimize import fsolve
 from matplotlib import gridspec
 from scipy.interpolate import interp1d
+import pickle
 
-
-#====================INPUT===================
 #import all common project variables
 import config
 imp.reload(config)
@@ -28,78 +27,98 @@ imp.reload(Plume)
 import graphics
 imp.reload(graphics)
 
-trials = 10             #number of times to rerun the model
-testPortion = 0.2       #portion of data to reserve for testing the model
-plot_profiles = 1
-#=================end of input===============
 
-# RunList = [i for i in config.tag if i not in config.exclude_bad]         #load a list of cases
-RunList = ['W5F7R4','W5F7R7T']
+RunList = [i for i in config.tag if i not in config.exclude_bad]         #load a list of cases
 runCnt = len(RunList)                                                  #count number of cases
 
-# #storage for variables
-# zi = np.empty((runCnt)) * np.nan                #BL height (m)
-# zCL = np.empty((runCnt)) * np.nan               #smoke injection height (m)
-# Phi = np.empty((runCnt)) * np.nan               #cumulative fire heat  (K m^2/s)
-# Omega = np.empty((runCnt)) * np.nan             #cumulative vertical temperature (Km) - the questionable denominator term
-# thetaS = np.empty((runCnt)) * np.nan
-# thetaCL = np.empty((runCnt)) * np.nan
-#
-# sounding = np.empty((runCnt,len(interpZ))) * np.nan         #storage for interpolated soundings
-# gradT0interp = np.empty((runCnt,len(interpZ)-1)) * np.nan   #storage for temperature gradient
-# depth = np.empty((runCnt)) * np.nan
-
-#======================repeat main analysis for all runs first===================
+#======================perform main analysis for all runs first===================
 #loop through all LES cases
+all_plumes = []
 for nCase,Case in enumerate(RunList):
     csdict = utils.prepCS(Case)      #load cross-wind integrated smoke and all other data
 
-    # #get the number of vertical levels available for PM and met variables
-    # metlvls = np.arange(0,(np.shape(csdict['u'])[1])*dz,dz)
-    # pmlvls = np.arange(0,(np.shape(csdict['pm25'])[1]+1)*dz,dz)
-
     #initalize a plume object
-    plume = Plume.LESplume(Case,interpZ)
+    plume = Plume.LESplume(Case,config.interpZ)
 
     #get quasi-stationary profile
-    pm = ma.masked_where(csdict['pm25'][-1,:,:] <= PMcutoff, csdict['pm25'][-1,:,:] ) #mask all non-plume cells
+    pm = ma.masked_where(csdict['pm25'][-1,:,:] <= config.PMcutoff, csdict['pm25'][-1,:,:] ) #mask all non-plume cells
     plume.get_zCL(pm)
+    plume.classify()
 
     #estimate fire intensity
     plume.get_I(csdict['ghfx2D'],5000)
 
-    if plot_profiles:
-        graphics.plot_profiles(plume, interpZ, csdict['w'][-1,:,:], csdict['temp'][-1,:,:])
 
 
-#======================compare model formulations========================
-zS = zi*BLfrac
-Tau = 1/ np.sqrt(g*Omega/(thetaS * (zCL-zS)))
-wStar =  (3./4)*Tau*((g*Phi*(zCL-zS)*(3/2.))/(thetaS*zi))**(1/3.)       #attempt at zi_dependent threshold
-wStarFit = linregress(wStar+zS,zCL)
-print(wStarFit)
+    if config.plot_profiles:
+        graphics.plot_profiles(plume,config.interpZ, csdict['w'][-1,:,:], csdict['temp'][-1,:,:])
+
+    all_plumes.append(plume)
 
 
-wStarC = Tau*((g*Phi*(zCL-zS))/(thetaS*zi))**(1/3.)
-firstGuessArray = wStarC[:,np.newaxis]
-C, _, _, _ = np.linalg.lstsq(firstGuessArray, zCL-zS)
-modelGuess = C*wStarC + zS
-biasFit = linregress(modelGuess,zCL)
+#pickle and save all plume data
+with open('plumes.pkl', 'wb') as f:
+    pickle.dump(all_plumes, f)
 
-plt.figure()
-plt.title('MODELLED SMOKE INJECTION HEIGHTS')
-ax = plt.gca()
-# plt.scatter(wStarC+zS,zCL,c=plume.read_tag('R',RunList),cmap =plt.cm.tab10)
-plt.scatter(modelGuess,zCL,c=Phi,cmap =plt.cm.plasma)
-# ax.set(ylabel = r'$z_{CL}$ [m]', xlabel = r'$C\tau_* \widetilde{w_f} + \frac{3}{4}z_i$ [m]',xlim = [400,3200], ylim = [400,3200])
-ax.set(ylabel = r'true $z_{CL}$ [m]', xlabel = r'injection model $z_{CL}$ [m]',xlim = [400,3200], ylim = [400,3200])
-plt.colorbar(label=r'fireline intensity [K m$^2$/s]')
-# plt.colorbar(label=r'atmospheric profile number')
-plt.plot(np.sort(modelGuess),biasFit[0]*np.sort(modelGuess)+biasFit[1], color='black', label='linear regression fit')
-plt.plot(np.sort(modelGuess),np.sort(modelGuess), linestyle = 'dashed', color='grey', label='unity line')
-plt.legend()
-plt.savefig(plume.figdir + 'injectionModel/NewInjectionTheory.pdf')
-plt.show()
+
+# Getting back the objects:
+with open('plumes.pkl','rb') as f:
+    all_plumes = pickle.load(f)
+
+#======================assess model performance========================
+#make a list of penetrative plumes
+penetrative_plumes = []
+for plume in all_plumes:
+    if plume.penetrative:
+        plume.get_wf()
+        penetrative_plumes.append(plume)
+
+#get first estimate for the plume rise
+zPrimeGuess, zPrimeTrue  = [],[]
+for plume in penetrative_plumes:
+    zPrimeGuess.append(plume.Tau * plume.wf)
+    zPrimeTrue.append(plume.zCL - plume.zs)
+
+#obtain emperical parameter C
+firstGuess = np.array(zPrimeGuess)[:,np.newaxis]
+C, _, _, _ = np.linalg.lstsq(firstGuess, zPrimeTrue)
+C = float(C)
+
+#obtain bias correction factors
+zPrimeModel = C*modelGuess
+zCLmodel, zCLtrue = [],[]
+for plume in penetrative_plumes:
+    estimate = C*plume.Tau*plume.wf + plume.zs
+    zCLmodel.append(estimate)
+    zCLtrue.append(plume.zCL)
+biasFit = linregress(zCLmodel,zCLtrue)
+
+# wStarC = Tau*((g*Phi*(zCL-zS))/(thetaS*zi))**(1/3.)
+# firstGuessArray = wStarC[:,np.newaxis]
+# C, _, _, _ = np.linalg.lstsq(firstGuessArray, zCL-zS)
+# modelGuess = C*wStarC + zS
+# biasFit = linregress(modelGuess,zCL)
+
+#plot model performance
+graphics.injection_model(penetrative_plumes, C, biasFit)
+
+import graphics
+imp.reload(graphics)
+
+# plt.figure()
+# plt.title('MODELLED SMOKE INJECTION HEIGHTS')
+# ax = plt.gca()
+# # plt.scatter(wStarC+zS,zCL,c=plume.read_tag('R',RunList),cmap =plt.cm.tab10)
+# plt.scatter(modelGuess,zCL,c=Phi,cmap =plt.cm.plasma)
+# # ax.set(ylabel = r'$z_{CL}$ [m]', xlabel = r'$C\tau_* \widetilde{w_f} + \frac{3}{4}z_i$ [m]',xlim = [400,3200], ylim = [400,3200])
+# ax.set(ylabel = r'true $z_{CL}$ [m]', xlabel = r'injection model $z_{CL}$ [m]',xlim = [400,3200], ylim = [400,3200])
+# plt.colorbar(label=r'fireline intensity [K m$^2$/s]')
+# # plt.colorbar(label=r'atmospheric profile number')
+# plt.plot(np.sort(modelGuess),biasFit[0]*np.sort(modelGuess)+biasFit[1], color='black', label='linear regression fit')
+# plt.plot(np.sort(modelGuess),np.sort(modelGuess), linestyle = 'dashed', color='grey', label='unity line')
+# plt.legend()
+# plt.savefig(plume.figdir + 'injectionModel/NewInjectionTheory.pdf')
+# plt.show()
 
 
 plt.figure()

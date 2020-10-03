@@ -26,7 +26,7 @@ dx = 40.
 dy = 40.
 
 #which runs to process
-dirpath = wrfdir+'interp/wrfcs_*'
+dirpath = wrfdir+'wrfcs_*'
 dirlist = glob.glob(dirpath)
 tag = [i[len(dirpath)-1:-4] for i in dirlist]
 exclude_runs = ['W5F4R0','W5F9R1','W5F8R3','W5F9R3','W5F1R3','W5F13R0','W5F1R7T','W5F8R7T','W5F9R7T']
@@ -42,11 +42,6 @@ interpZ = np.arange(0, 4001, zstep) #set up interpolated vertical profile
 BLfrac = 0.75                   #fraction of BL height to use as reference height z_s (default = 0.75)
 
 
-
-
-# lvl = np.arange(0,2800,dz)	 	#vertical levels in m
-# lvltall = np.arange(0,3201,dz)  #vertical levels for *T runs
-
 #fireline configuration
 ign_over = 20                   #number of history intervals exluded from analysis start (corresponding to ignition)
 
@@ -55,6 +50,12 @@ ign_over = 20                   #number of history intervals exluded from analys
 # fireline = 4000.,6000.          #fireline start and end in meters
 
 
+#which plots to make
+plot_profiles = 1
+
+#model cross-evaluation variables
+trials = 10             #number of times to rerun the model
+testPortion = 0.2       #portion of data to reserve for testing the model
 
 #model evaluation
 rxcadredata = '/Users/nmoisseeva/data/plume/rxcadre/wrfout_test_main'

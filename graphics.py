@@ -14,8 +14,6 @@ from scipy.interpolate import interp1d
 import config
 
 def plot_profiles(plume, interpZ, w, T):
-
-
     dimZ, dimX = np.shape(w)     #get shape of data
     metlvls = np.arange(0,dimZ*config.dz,config.dz)
 
@@ -57,4 +55,33 @@ def plot_profiles(plume, interpZ, w, T):
     plt.legend()
     plt.tight_layout()
     plt.savefig(figpath + 'profiles_%s.pdf' %plume.name)
+    plt.close()
+
+def injection_model(all_plumes,C,biasFit):
+
+    #create a storage directory for plots
+    figpath = config.figdir + 'injection/'
+    if not os.path.exists(figpath):
+        os.makedirs(figpath)
+
+    modelled_array = []
+    true_array = []
+    c_array = []
+    for plume in all_plumes:
+        modelled_zCL = C*plume.Tau*plume.wf + plume.zs
+        modelled_array.append(modelled_zCL)
+        true_array.append(plume.zCL)
+        c_array.append(plume.I)
+
+    plt.figure()
+    plt.title('MODELLED SMOKE INJECTION HEIGHTS')
+    ax = plt.gca()
+    plt.scatter(modelled_array ,true_array,c=c_array,cmap =plt.cm.plasma)
+    ax.set(ylabel = r'true $z_{CL}$ [m]', xlabel = r'model $z_{CL}$ [m]',aspect='equal')
+    # ax.set(ylabel = r'true $z_{CL}$ [m]', xlabel = r'model $z_{CL}$ [m]',xlim = [400,3200], ylim = [400,3200])
+    plt.colorbar(label=r'fireline intensity [K m$^2$/s]')
+    plt.plot(np.sort(modelled_array),biasFit[0]*np.sort(modelled_array)+biasFit[1], color='black', label='linear regression fit')
+    plt.plot(np.sort(modelled_array),np.sort(modelled_array), linestyle = 'dashed', color='grey', label='unity line')
+    plt.legend()
+    plt.savefig(figpath + 'MainInjection_allPlumes.pdf')
     plt.close()

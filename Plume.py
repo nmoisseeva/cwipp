@@ -6,7 +6,7 @@ import utils
 
 
 class Plume:
-    """
+    r"""
     Parent Plume class
 
     ...
@@ -25,11 +25,17 @@ class Plume:
         ambient potential tempreature at reference height zs [K]
     I : float
         fireline intensity parameter [K m2 s-1]
+    wf : float
+        characteristic fire velocity scale [m s-1]
+    Tau : float
+        characteristic timescale [s]
 
     Methods:
     -------
     get_I(flux2D, *Us):
         Finds cross-wind fireline intensity parameter I
+    get_wf(self):
+        Applies plume rise parameterization to find characteristic time ($\Tau$) and velocity ($w_f$) scales
     """
 
     def __init__(self, name, interpZ):
@@ -110,6 +116,41 @@ class Plume:
 
         self.I = I
 
+    def get_wf(self):
+        r"""
+        Applies plume rise parameterization to find characteristic time ($\Tau$) and velocity ($w_f$) scales
+        ...
+
+        Returns:
+        -------
+        wf : float
+            characteristic fire velocity scale [m s-1]
+        Tau : float
+            characteristic timescale [s]
+        """
+        Tau = 1/np.sqrt(config.g*(self.THzCL - self.THs)/(self.THs * (self.zCL-self.zs)))
+        wf= ((config.g*self.I*(self.zCL-self.zs))/(self.THs*self.zi))**(1/3.)
+
+        self.Tau = Tau
+        self.wf = wf
+
+
+    def classify(self):
+        """
+        Classifies the plume as penetrative (True) or boundary layer (False)
+        ...
+        Returns:
+        -------
+        penetrative : boolean
+            classification (True if penetrative)
+        """
+
+        if  self.zCL < (self.zi + (config.dz)/2):
+            self.penetrative = False
+        else:
+            self.penetrative = True
+
+
 class LESplume(Plume):
     """
     Child Plume class used for operating on simulated plumes with full fields available (i.e. non-predictive mode)
@@ -146,6 +187,10 @@ class LESplume(Plume):
             1D vector corresponding to quasi-stationary downwind PM profile
         quartiles: ndarray
             2D array with columns corresponding to Q1 and Q3 profiles
+        zCL : float
+            plume injection height [m]
+        THzCL : float
+            ambient potential temperature at zCL [K]
         """
 
         #set up dimensions
