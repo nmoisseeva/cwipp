@@ -115,3 +115,29 @@ def prepCS(Case):
         np.save(profpathU,profileU)
         print('...Generated new profiles' )
     return csdict
+
+def plume_error(plumes, C):
+    r'''
+    Get true and parameterized injection height for a collection of plumes
+    ...
+    Parameters:
+    -----------
+    plumes : list
+        list containing plume objects
+    C : float
+        empirical fit parameter
+
+    Returns:
+    -------
+    zCLmodel : list
+        modelled injection height [m]
+    zCLtrue : list
+        LES-derived injection height [m]
+    '''
+    zCLmodel, zCLtrue = [],[]
+    for plume in plumes:
+        estimate = C*plume.Tau*plume.wf + plume.zs
+        zCLmodel.append(estimate)
+        zCLtrue.append(plume.zCL)
+
+    return zCLmodel, zCLtrue

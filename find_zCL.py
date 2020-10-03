@@ -93,8 +93,9 @@ for plume in penetrative_plumes:
     estimate = C*plume.Tau*plume.wf + plume.zs
     zCLmodel.append(estimate)
     zCLtrue.append(plume.zCL)
-biasFit = linregress(zCLmodel,zCLtrue)
 
+zCLmodel, zCLtrue = utils.plume_error(penetrative_plumes, C)
+biasFit = linregress(zCLmodel,zCLtrue)
 
 #plot model performance
 graphics.injection_model(penetrative_plumes, C, biasFit)
@@ -160,70 +161,40 @@ graphics.bias_correction(raw_error, unbiased_error, true_zCL, figname='ExplicitS
 #======================train and test regression model===================
 
 #create storage arrays for R values, modelled zCL, model error and trail subsets of true zCL derived from data
-Rstore = np.empty((trials)) * np.nan
-ModelError = []
-TrueTrialZcl = []
-TrialFuel = []
-TrialName = []
+ModelError, TrialZcl, TrialFuel, Rstore = [], [], [], []
 
-for nTrial in range(trials):
+for nTrial in range(config.trials):
     #split runs into train and test datasets
-    TestFlag = np.random.binomial(1,testPortion,runCnt)                 #pick a random set of approximately 20% of data
-    testCnt = sum(TestFlag)         #count how many runs ended up as test dataset
+    RandomSample = np.random.binomial(1,config.testPortion,len(penetrative_plumes))                 #pick a random set of approximately 20% of data
+    TrainSet = np.where(RandomSample==1)[0]
+    TestSet = np.where(RandomSample==0)[0]
 
     #linear regression using training data subset only
-    trialFit = linregress(C*wStarC[TestFlag==0]+zS[TestFlag==0],zCL[TestFlag==0])
-    print('Sum of residuals using TRAINING data: %0.2f' %trialFit[2])
-    Rstore[nTrial] = trialFit[2]        #store trial value
+    trainSubset = []
+    for i in TrainSet:
+        trainSubset.append(penetrative_plumes[i])
+    zCLmodel, zCLtrue = utils.plume_error(trainSubset, C)
+    trialFit = linregress(zCLmodel, zCLtrue)
+    Rstore.append(trialFit[2])
 
-    #plot individual trial results
-    fig = plt.figure()
-    plt.suptitle('REGRESSION MODEL: ALL [R=%0.2f] vs TRAIN DATA [R=%0.2f]' %(biasFit[2], trialFit[2]))
-    ax=plt.gca()
-    plt.scatter(C*wStarC[TestFlag==0]+zS[TestFlag==0], zCL[TestFlag==0], c='C2', label='training data')
-    plt.scatter(C*wStarC[TestFlag==1]+zS[TestFlag==1], zCL[TestFlag==1], c='C1', label='test data')
-    plt.plot(np.sort(C*wStarC+zS),biasFit[0]* np.sort(C*wStarC+zS) + biasFit[1],  c='grey', label='all data')
-    plt.plot(np.sort(C*wStarC+zS),trialFit[0]* np.sort(C*wStarC+zS) + trialFit[1], c='C2', label='training data regression fit')
+    test_error, test_truth, fuel_cat = [], [], []
+    for nTest in TestSet:
+        testPlume = Plume.MODplume(penetrative_plumes[nTest].name)
+        testPlume.I = penetrative_plumes[nTest].I
+        test_estimate = testPlume.iterate(C, trialFit)              #####STOPPPED HERE: NEED TO ADD POLYMORPHISM, TO PROVIDE OUTPUT TO FUNCITON (instead of assigning attributes)
+        truth = penetrative_plumes[nTest].zCL
+        test_truth.append(truth)
+        test_error.append(truth - test_estimate)
+        fuel_cat.append(utils.read_tag('F',np.array(penetrative_plumes[nTest].name)))
 
-    ax.set(xlabel=r'$\frac{3}{4}\tau \widetilde{w_{f*}} + \frac{3}{4}z_i$ [m/s]',ylabel='zCL [m]')
-    plt.legend()
-    plt.savefig(plume.figdir + 'injectionModel/trials/ALLvsTRAINdataTrial%s.pdf' %nTrial )
-    plt.show()
-    plt.close()
-
-    #solve numerically for each run belonging to the Test subgroup
-    zCLmodel = np.empty((testCnt)) * np.nan
-
-    for nTest in range(testCnt):
-        testIdx = np.where(TestFlag==1)[0][nTest]                   #get index of test run in the LES subset
-
-        # toSolve = lambda z : z - (trialFit[0]*BLfrac*zi[testIdx] + trialFit[1]) - \
-        #             trialFit[0] * 1/(np.sqrt(g*(sounding[testIdx,int(z/zstep)] - thetaS[testIdx])/(thetaS[testIdx] * (z-zi[testIdx]*BLfrac))))  * \
-        #             (g*Phi[testIdx]*(z-zi[testIdx]*BLfrac)/(thetaS[testIdx] * zi[testIdx]))**(1/3.)
-
-        toSolve = lambda z : z - trialFit[1] - trialFit[0]*(zS[testIdx] + \
-                    C/(np.sqrt(g*(sounding[testIdx,int(z/zstep)] - thetaS[testIdx])/(thetaS[testIdx] * (z-zi[testIdx]*BLfrac))))  * \
-                    (g*Phi[testIdx]*(z-zi[testIdx]*BLfrac)/(thetaS[testIdx] * zi[testIdx]))**(1/3.))
-
-        z_initial_guess = zi[testIdx]                    #make initial guess BL height
-        z_solution = fsolve(toSolve, z_initial_guess,factor=0.1)               #solve
-
-        zCLmodel[nTest] = z_solution                                #store the solution
-        print('%s solution is zCL = %0.2f' % (np.array(RunList)[testIdx],z_solution))
-        print('...True value: %0.2f ' %zCL[testIdx])
-    error = zCL[TestFlag==1]  - zCLmodel                          #calculate error between model and 'truth'
+    error = test_truth  - test_error                         #calculate error between model and 'truth'
     ModelError.append(error)                                        #store model error
-    TrueTrialZcl.append(zCL[TestFlag==1])                           #store true subset
-    category = plume.read_tag('F',np.array(RunList)[TestFlag==1])
-    TrialFuel.append(category)
-    TrialName.append(np.array(RunList)[TestFlag==1])
-#======================plot model sensitivity===================
+    TrueTrialZcl.append(test_truth)                           #store true subset
+    TrialFuel.append(fuel_cat)
 
-flatTrueTrialZcl  = np.concatenate(TrueTrialZcl)                #flatten test array of injection heights
+flatTrialZcl  = np.concatenate(TrueTrialZcl)                #flatten test array of injection heights
 flatModelError = np.concatenate(ModelError)                     #flatten model error
 flatTrialFuel = np.concatenate(TrialFuel)
-flatTrialName = np.concatenate(TrialName)
-
 
 #plot model sensitivity
 plt.figure(figsize=(6,6))
