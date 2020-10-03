@@ -39,7 +39,7 @@ for nCase,Case in enumerate(RunList):
     csdict = utils.prepCS(Case)      #load cross-wind integrated smoke and all other data
 
     #initalize a plume object
-    plume = Plume.LESplume(Case,config.interpZ)
+    plume = Plume.LESplume(Case)
 
     #get quasi-stationary profile
     pm = ma.masked_where(csdict['pm25'][-1,:,:] <= config.PMcutoff, csdict['pm25'][-1,:,:] ) #mask all non-plume cells
@@ -63,7 +63,6 @@ graphics.plot_soundings(all_plumes)
 with open('plumes.pkl', 'wb') as f:
     pickle.dump(all_plumes, f)
 
-
 # # Getting back the objects:
 # with open('plumes.pkl','rb') as f:
 #     all_plumes = pickle.load(f)
@@ -83,7 +82,7 @@ for plume in penetrative_plumes:
     zPrimeGuess.append(plume.Tau * plume.wf)
     zPrimeTrue.append(plume.zCL - plume.zs)
 
-#obtain emperical parameter C
+#obtain empirical parameter C
 firstGuess = np.array(zPrimeGuess)[:,np.newaxis]
 C, _, _, _ = np.linalg.lstsq(firstGuess, zPrimeTrue)
 C = float(C)
@@ -100,166 +99,65 @@ biasFit = linregress(zCLmodel,zCLtrue)
 #plot model performance
 graphics.injection_model(penetrative_plumes, C, biasFit)
 
-#================dimensionless fit=========================
+
+#===========test iterative solution, do bias correction===============
+imp.reload(Plume)
+raw_error, unbiased_error, true_zCL = [], [], []
+for plume in penetrative_plumes:
+    raw_plume = Plume.MODplume(plume.name)
+    raw_plume.I = plume.I
+    raw_plume.iterate(C)
+    unbiased_plume = Plume.MODplume(plume.name)
+    unbiased_plume.I = plume.I
+    unbiased_plume.iterate(C,biasFit)
+    true_zCL.append(plume.zCL)
+    raw_error.append(plume.zCL - raw_plume.zCL)
+    unbiased_error.append(plume.zCL - unbiased_plume.zCL)
+
+#plot bias correction statistics on iterative solution
+graphics.bias_correction(raw_error, unbiased_error, true_zCL, figname='IterativeSolution')
+
+#================explicit solution and dimensionless groups=========================
+imp.reload(Plume)
 print('Fitting dimensionless groups')
 zStar, HStar, cI = [], [], []
+raw_error, unbiased_error, true_zCL = [], [], []
 for plume in penetrative_plumes:
     if utils.read_tag('R',[plume.name])==8:
         print('..... skipping %s' %plume.name)
         continue
+    #dimenionsless groups
     i_zi = np.nanargmin(abs(config.interpZ - plume.zi))
     i_zs = np.nanargmin(abs(config.interpZ - plume.zs))
-    i_top = np.nanargmin(abs(config.interpZ - (plume.zi+1000)))
+    i_top = np.nanargmin(abs(config.interpZ - (plume.zi+1000)))     #estimate lapse rate over a km above zi
     baselinedTH = plume.sounding[i_zi:i_top] - plume.sounding[i_zs]
     GammaFit = linregress(config.interpZ[i_zi:i_top],baselinedTH)
     Gamma = GammaFit[0]
-    zE = -GammaFit[1]/GammaFit[0]
-    zStar.append((plume.zCL - zE)/plume.zi)
+    ze = -GammaFit[1]/GammaFit[0]
+    zStar.append((plume.zCL - ze)/plume.zi)     #first dimensionless group
     estimateH = C**(3/2.)*((plume.THs/(config.g*Gamma**3))**(1/4.)) * np.sqrt(plume.I/plume.zi**3)
-    HStar.append(estimateH)
-    cI.append(plume.I)
+    HStar.append(estimateH)                     #second dimensionless group
+    cI.append(plume.I)              #save intensity for colorizing the plot
 
-imp.reload(graphics)
+    #explicit solution
+    raw_plume = Plume.MODplume(plume.name)
+    raw_plume.I = plume.I
+    raw_plume.explicit_solution(C, Gamma, ze)
+    unbiased_plume = Plume.MODplume(plume.name)
+    unbiased_plume.I = plume.I
+    unbiased_plume.explicit_solution(C, Gamma, ze, biasFit)
+    true_zCL.append(plume.zCL)
+    raw_error.append(plume.zCL - raw_plume.zCL)
+    unbiased_error.append(plume.zCL - unbiased_plume.zCL)
+
+
 #plot dimensionless performance
 graphics.dimensionless_groups(HStar,zStar,cI)
 
-#===========iterative solution===============
-zCLerror = np.empty((runCnt)) * np.nan          #parameterization error [m]
-zCLerrorBiased = np.empty((runCnt)) * np.nan          #parameterization error [m]
-zCLcalc = np.empty((runCnt)) * np.nan          #parameterization error [m]
-
-from scipy.optimize import root
-for nCase,Case in enumerate(RunList):
-    BLidx = np.nanargmin(abs(interpZ - BLfrac*zi[nCase]))
-
-
-    # toSolveCase = lambda z : z - (C*BLfrac*zi[nCase] + wStarCFit[1]) - \
-    #                 C * 1/(np.sqrt(g*(sounding[nCase,int(z/zstep)] - thetaS[nCase])/(thetaS[nCase] * (z-zi[nCase]*BLfrac))))  * \
-    #                 (g*Phi[nCase]*(z-zi[nCase]*BLfrac)/(thetaS[nCase] * zi[nCase]))**(1/3.)
-
-    toSolveCase = lambda z : z  - biasFit[1] - biasFit[0]*(zS[nCase] + \
-                    C/(np.sqrt(g*(sounding[nCase,int(z/zstep)] - thetaS[nCase])/(thetaS[nCase] * (z-zi[nCase]*BLfrac))))  * \
-                    (g*Phi[nCase]*(z-zi[nCase]*BLfrac)/(thetaS[nCase] * zi[nCase]))**(1/3.))
-
-    #NOT bias-corrected
-    # toSolveCaseBiased = lambda z : z - (BLfrac*zi[nCase])  - \
-    #                 3./(4* np.sqrt(g*(sounding[nCase,int(z/zstep)] - thetaS[nCase])/(thetaS[nCase] * (z-zi[nCase]*BLfrac))))  * \
-    #                 (g*Phi[nCase]*(z-zi[nCase]*BLfrac)*(3/2.)/(thetaS[nCase] * zi[nCase]))**(1/3.)
-    #
-    # toSolveCaseBiased = lambda z : z - (BLfrac*zi[nCase])  - \
-    #                 C/(np.sqrt(g*(sounding[nCase,int(z/zstep)] - thetaS[nCase])/(thetaS[nCase] * (z-zi[nCase]*BLfrac))))  * \
-    #                 (g*Phi[nCase]*(z-zi[nCase]*BLfrac)/(thetaS[nCase] * zi[nCase]))**(1/3.)
-
-    toSolveCaseBiased = lambda z : z - zS[nCase]  - \
-                    C/(np.sqrt(g*(sounding[nCase,int(z/zstep)] - thetaS[nCase])/(thetaS[nCase] * (z-zi[nCase]*BLfrac))))  * \
-                    (g*Phi[nCase]*(z-zi[nCase]*BLfrac)/(thetaS[nCase] * zi[nCase]))**(1/3.)
-
-    z_initial_guess = zi[nCase]                   #make initial guess BL height
-    z_solution = fsolve(toSolveCase, z_initial_guess,factor=0.1)             #solve
-    z_solutionBiased = fsolve(toSolveCaseBiased, z_initial_guess,factor=0.1)             #solve
-
-    # zCLcalc[nCase] = (3/4)**6 * (thetaS[nCase]/g) * (((3/2.)* Phi[nCase]/zi[nCase])**2) * (thetaCL[nCase]-thetaS[nCase])**(-3) + BLfrac*zi[nCase]
-    zCLerror[nCase] =  zCL[nCase]  - z_solution                              #store the solution
-    zCLerrorBiased[nCase] =  zCL[nCase]  - z_solutionBiased                              #store the solution
-
-
-plt.figure(figsize=(9,6))
-plt.suptitle('ITERATIVE SOLUTION')
-gs = gridspec.GridSpec(2, 2, width_ratios=[3,1])
-ax0 = plt.subplot(gs[0])
-plt.title('(a) Error as f($z_{CL})$: RAW')
-plt.scatter(zCL,zCLerrorBiased)
-plt.hlines(0,200,3200,colors='grey',linestyles='dashed')
-# for i, txt in enumerate(RunList):
-#     ax0.annotate(txt, (zCL[i], zCLerror[i]),fontsize=6)
-ax0.set(xlabel=r'$z_{CL}$ [m]', ylabel='error [m]',ylim =[-350,350],xlim=[400,3200])
-ax1 = plt.subplot(gs[1])
-plt.title('(b) Error Statistics')
-plt.boxplot(zCLerrorBiased)
-plt.hlines(0,0.5,1.5,colors='grey',linestyles='dashed')
-ax1.set(xlabel=r'$z_{CL}$',ylabel='error [m]',ylim = [-350,350], xticklabels=[''])
-ax2 = plt.subplot(gs[2])
-plt.title('(c) Error as f($z_{CL})$: BIAS CORRECTED')
-plt.scatter(zCL,zCLerror)
-plt.hlines(0,200,3200,colors='grey',linestyles='dashed')
-ax2.set(xlabel=r'$z_{CL}$ [m]', ylabel='error [m]',ylim =[-350,350],xlim=[400,3200])
-ax3 = plt.subplot(gs[3])
-plt.title('(d) Error Statistics')
-plt.boxplot(zCLerror)
-plt.hlines(0,0.5,1.5,colors='grey',linestyles='dashed')
-ax3.set(xlabel=r'$z_{CL}$',ylabel='error [m]',ylim = [-350,350], xticklabels=[''])
-plt.show()
-plt.subplots_adjust(top=0.85)
-plt.tight_layout(rect=[0, 0, 1, 0.95])
-plt.savefig(plume.figdir + 'injectionModel/IterativeSolution.pdf')
-plt.show()
-plt.close()
-
-
-# #========sensitivity test for zs values==========================
-# plt.figure()
-# ax = plt.gca()
-# for BLfrac in np.arange(0.5, 0.78, 0.02):
-#     omega = np.empty((len(RunList)))
-#     thetas = np.empty((len(RunList)))
-#     for nCase in range(len(RunList)):
-#         sidx = np.nanargmin(abs(interpZ - BLfrac*zi[nCase]))
-#         zCLidx = np.argmin(abs(interpZ - zCL[nCase]))
-#         omega[nCase] = np.trapz(gradT0interp[nCase,sidx:zCLidx],dx=zstep)
-#         thetas[nCase] = sounding[nCase,sidx]
-#     tau = 1/ np.sqrt(g*omega/(thetas * (zCL-zS)))
-#     wstar =  (3/4) *tau*(g*Phi*(zCL-zS)*(3/2.)/(thetas*zi))**(1/3.)       #attempt at zi_dependent threshold
-#     wstarfit = linregress(wstar+zS,zCL)
-#     print(wstarfit)
-#     ax.scatter(BLfrac,wstarfit[2],c='C1')
-# ax.set(xlabel='BL fraction', ylabel='R value of the fit')
-# plt.tight_layout()
-# plt.show()
-
-#===========gamma solution===============
-Gammaerror = np.empty((runCnt)) * np.nan          #parameterization error [m]
-GammaerrorBiased = np.empty((runCnt)) * np.nan          #parameterization error [m]
-for nCase,Case in enumerate(RunList):
-    Gamma_solution = biasFit[0]*(C*((thetaE[nCase]/g)**(1/4.)) * ((Phi[nCase]/zi[nCase])**(0.5)) * (1/Gamma[nCase])**(3/4.) + zE[nCase]) + biasFit[1]
-    Gammaerror[nCase] = zCL[nCase]  - Gamma_solution                               #store the solution
-    Gamma_solutionBiased = (C**(3/2.)*(thetaE[nCase]/g)**(1/4.)) * ((Phi[nCase]/zi[nCase])**(0.5)) * (1/Gamma[nCase])**(3/4.) +zE[nCase]
-    GammaerrorBiased[nCase] =  zCL[nCase]  - Gamma_solutionBiased                              #store the solution
-
-plt.figure(figsize=(9,6))
-plt.suptitle('EXPLICIT SOLUTION')
-gs = gridspec.GridSpec(2, 2, width_ratios=[3,1])
-ax0 = plt.subplot(gs[0])
-plt.title(r'(a) Error as f($z_{CL})$: RAW')
-plt.scatter(zCL[exclude_idx],GammaerrorBiased[exclude_idx])
-plt.hlines(0,200,3200,colors='grey',linestyles='dashed')
-# for i, txt in enumerate(RunList):
-#     ax0.annotate(txt, (zCL[i], zCLerror[i]),fontsize=6)
-ax0.set(xlabel=r'$z_{CL}$ [m] ', ylabel='error [m]',ylim =[-350,350],xlim=[400,3200])
-ax1 = plt.subplot(gs[1])
-plt.title('(b) Error Statistics')
-plt.boxplot(GammaerrorBiased[exclude_idx])
-plt.hlines(0,0.5,1.5,colors='grey',linestyles='dashed')
-ax1.set(xlabel=r'$z_{CL}$',ylabel='error [m]',ylim = [-350,350], xticklabels=[''])
-ax2 = plt.subplot(gs[2])
-plt.title(r'(c) Error as f($z_{CL})$: BIAS CORRECTED')
-plt.scatter(zCL[exclude_idx],Gammaerror[exclude_idx])
-plt.hlines(0,200,3200,colors='grey',linestyles='dashed')
-ax2.set(xlabel=r'$z_{CL}$ [m] ', ylabel='error [m]',ylim =[-350,350],xlim=[400,3200])
-ax3 = plt.subplot(gs[3])
-plt.title('(d) Error Statistics')
-plt.boxplot(Gammaerror[exclude_idx])
-plt.hlines(0,0.5,1.5,colors='grey',linestyles='dashed')
-ax3.set(xlabel=r'$z_{CL}$',ylabel='error [m]',ylim = [-350,350], xticklabels=[''])
-plt.subplots_adjust(top=0.85)
-plt.tight_layout(rect=[0, 0, 1, 0.95])
-plt.savefig(plume.figdir + 'injectionModel/ExplicitSolution.pdf')
-plt.show()
-plt.close()
-
-
+#plot bias correction statistics on explicit solution
+graphics.bias_correction(raw_error, unbiased_error, true_zCL, figname='ExplicitSolution')
 
 #======================train and test regression model===================
-
 
 #create storage arrays for R values, modelled zCL, model error and trail subsets of true zCL derived from data
 Rstore = np.empty((trials)) * np.nan
@@ -366,30 +264,21 @@ plt.savefig(plume.figdir + 'injectionModel/FuelvsErrorHeight_TRIALS.pdf')
 plt.show()
 plt.close()
 
-
-#plot rearranged SOLUTION
-LHS = (zCL - zS) * (g*Omega/thetaS)
-RHS = (C**6) * ((Phi/(zi * Omega))**2)
-plt.figure()
-plt.title('REARRANGED FORM RS')
-plt.scatter(RHS, LHS)
-plt.gca().set(xlabel=r'$C^6\left(\frac{I}{z_i(\theta_{CL}-\theta_s)}\right)^2$',ylabel=r'$z\prime g\prime$')
-plt.savefig(plume.figdir + 'injectionModel/RearrangedGroupsRS.pdf')
-plt.show()
-
-#plot rearranged SOLUTION-with Tau
-zCLrearranged = C**6 * (thetaS/g) * (Phi/zi)**2 * Omega**(-3.)+ zS
-plt.figure()
-plt.title('REARRANGED FORM NM')
-plt.scatter(zCLrearranged, zCL)
-plt.gca().set(xlabel=r'$C^6\left[\frac{\theta_s}{g}\right] \left[\frac{I}{z_i}\right]^2 \left[\theta_{CL}-\theta_s\right]+z_s$',ylabel=r'$z_{CL}$')
-plt.savefig(plume.figdir + 'injectionModel/RearrangedGroupsNM.pdf')
-plt.show()
-
-#plot velocity comparison
-plt.figure()
-plt.title('COMPARE VELOCITIES')
-plt.scatter(wStarC/(Tau*C),(Phi/(zi * Omega)) )
-plt.gca().set(xlabel=r'$\widetilde{w_f}$',ylabel=r'$\frac{I}{z_i(\theta_{CL}-\theta_s)}$',aspect='equal',xlim = [0,20],ylim = [0,20])
-plt.savefig(plume.figdir + 'injectionModel/CompareWs.pdf')
-plt.show()
+#
+# #plot rearranged SOLUTION
+# LHS = (zCL - zS) * (g*Omega/thetaS)
+# RHS = (C**6) * ((Phi/(zi * Omega))**2)
+# plt.figure()
+# plt.title('REARRANGED FORM RS')
+# plt.scatter(RHS, LHS)
+# plt.gca().set(xlabel=r'$C^6\left(\frac{I}{z_i(\theta_{CL}-\theta_s)}\right)^2$',ylabel=r'$z\prime g\prime$')
+# plt.savefig(plume.figdir + 'injectionModel/RearrangedGroupsRS.pdf')
+# plt.show()
+#
+# #plot velocity comparison
+# plt.figure()
+# plt.title('COMPARE VELOCITIES')
+# plt.scatter(wStarC/(Tau*C),(Phi/(zi * Omega)) )
+# plt.gca().set(xlabel=r'$\widetilde{w_f}$',ylabel=r'$\frac{I}{z_i(\theta_{CL}-\theta_s)}$',aspect='equal',xlim = [0,20],ylim = [0,20])
+# plt.savefig(plume.figdir + 'injectionModel/CompareWs.pdf')
+# plt.show()

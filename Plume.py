@@ -36,9 +36,11 @@ class Plume:
         Finds cross-wind fireline intensity parameter I
     get_wf(self):
         Applies plume rise parameterization to find characteristic time ($\Tau$) and velocity ($w_f$) scales
+    classify(self):
+        Determine whether plume penetrates the boundary layer top or not
     """
 
-    def __init__(self, name, interpZ):
+    def __init__(self, name):
         """
         Constructs the plume object with some inital attributes
         ...
@@ -47,8 +49,6 @@ class Plume:
         -----------
         name: str
             plume name
-        interpZ: ndarray
-            1D array containing levels AGL [m] on which to perform analysis
         """
 
         #get initial raw sounding (from cross-section wrfcs data)
@@ -61,8 +61,8 @@ class Plume:
         #interpolate sounding to analysis levels
         metlvls = np.arange(0,len(T0)*config.dz,config.dz)
         interpT= interp1d(metlvls,T0,fill_value='extrapolate')
-        T0interp = interpT(interpZ)
-        i_zs = np.argmin(abs(interpZ - zs))
+        T0interp = interpT(config.interpZ)
+        i_zs = np.argmin(abs(config.interpZ - zs))
         THs = T0interp[i_zs]
 
         self.name = name
@@ -257,3 +257,86 @@ class LESplume(Plume):
 
         self.zCL = zCL
         self.THzCL = THzCL
+
+class MODplume(Plume):
+    """
+    Child Plume class used for modelled plumes (i.e. predictive mode)
+    ...
+    Attributes
+    ----------
+    zCL : float
+        parameterized plume injection height [m]
+    THzCL : float
+        ambient potential temperature at modelled zCL [K]
+
+    Methods
+    -------
+    iterate(self):
+        Applies iterative solution to parameterize plume injection height
+    """
+
+    def iterate(self, C, biasFit=None):
+        r"""
+        Applies iterative solution to parameterize plume injection height
+        ...
+
+        Parameters
+        ----------
+        C : float
+            Empirical constant for $z^\prime$ equation
+        biasFit : array_like, optional
+            bias fit parameters. Default is m = 1, b = 0
+
+        Returns:
+        -------
+        zCL : float
+            parameterized plume injection height [m]
+        THzCL : float
+            ambient potential temperature at modelled zCL [K]
+        """
+        if biasFit:
+            m, b = biasFit[0], biasFit[1]
+        else:
+            m, b = 1, 0
+
+        i_zs = np.nanargmin(abs(config.interpZ - self.zs))
+
+        toSolve = lambda z : z  - b - m*(self.zs + \
+                        C/(np.sqrt(config.g*(self.sounding[int(z/config.zstep)] - self.THs)/(self.THs * (z-self.zs))))  * \
+                        (config.g*self.I*(z-self.zs)/(self.THs * self.zi))**(1/3.))
+
+        zCL = fsolve(toSolve, self.zi, factor=0.1)
+        i_zCL = np.nanargmin(abs(config.interpZ - zCL))
+
+        THzCL = self.sounding[i_zCL]
+
+        self.THzCL = THzCL
+        self.zCL = float(zCL)
+
+    def explicit_solution(self, C, Gamma, ze, biasFit=None):
+        r"""
+        Applies iterative solution to parameterize plume injection height
+        ...
+
+        Parameters
+        ----------
+        C : float
+            Empirical constant for $z^\prime$ equation
+        biasFit : array_like, optional
+            bias fit parameters. Default is m = 1, b = 0
+
+        Returns:
+        -------
+        zCL : float
+            parameterized plume injection height [m]
+        THzCL : float
+            ambient potential temperature at modelled zCL [K]
+        """
+        if biasFit:
+            m, b = biasFit[0], biasFit[1]
+        else:
+            m, b = 1, 0
+
+        zCL = m*((C**(3/2.)) * ((self.THs/config.g)**(1/4.)) * ((self.I/self.zi)**(0.5)) * ((1/Gamma)**(3/4.)) + ze) + b
+
+        self.zCL = zCL
