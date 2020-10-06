@@ -60,6 +60,104 @@ def plot_profiles(plume, interpZ, w, T):
     plt.savefig(figpath + 'profiles_%s.pdf' %plume.name)
     plt.close()
 
+def plot_conservedvars(plume,T,pm):
+
+    Cp = 1005
+    dimZ, dimX = np.shape(pm)     #get shape of data
+
+    dimZT = np.shape(T)[0]
+    Tctr_idx = [dimZT-1 if nX >=dimZT else nX for nX in plume.ctr_idx ]
+
+    PMctr = np.array([pm[plume.ctr_idx[nX],nX] for nX in range(dimX)])
+    Tctr = np.array([T[Tctr_idx[nX],nX] for nX in range(dimX)])
+
+    #create a storage directory for plots
+    figpath = config.figdir + 'mixing/'
+    if not os.path.exists(figpath):
+        os.makedirs(figpath)
+
+    plt.figure()
+    plt.title('CONSERVED VARIABLE PLOT: %s' %plume.name)
+    plt.scatter(Cp*Tctr/1000,PMctr/1000,c=plume.centerline/plume.zi, cmap = plt.cm.coolwarm,vmin=0,vmax=2,s=6)
+    plt.gca().set(xlabel=r'dry static energy ($\theta \cdot C_p$) [kJ/kg]', ylabel='PM mixing ratio [mg/kg]')
+    plt.colorbar(label=r'$z/z_i$')
+    plt.savefig(figpath + 'CTRmixing_%s.pdf' %plume.name)
+    plt.close()
+
+def plot_zcl(plume,pm,fireCS,flux2D):
+
+    dimZ, dimX = np.shape(pm)     #get shape of data
+    pmlvls = np.arange(0,dimZ*config.dz,config.dz)
+    cropX = int(dimX*0.75)
+    axMax = cropX * config.dx
+    haxis = np.arange(cropX)*config.dx
+    PMmg = pm/1000.                                        #smoke concentration in ppm
+    maxPM = int(np.max(PMmg))
+
+
+    #create a storage directory for plots
+    figpath = config.figdir + 'CWIzcl/'
+    if not os.path.exists(figpath):
+        os.makedirs(figpath)
+
+    fig = plt.figure(figsize=(11,5))
+    gs = fig.add_gridspec(ncols=2, nrows=2,width_ratios=[4,1])
+    plt.suptitle('%s' %plume.name)
+
+    ax1=fig.add_subplot(gs[0])
+    axh1=ax1.twinx()
+    # ---cwi smoke  and colorbar
+    im = ax1.imshow(PMmg[:,:cropX], origin='lower', extent=[0,axMax,0,pmlvls[-1]],cmap=plt.cm.cubehelix_r,vmin=0, vmax=maxPM/10)
+    cbari = fig.colorbar(im, orientation='horizontal',aspect=60, shrink=0.5)
+    cbari.set_label('CWI smoke [mg/kg]')
+    ax1.plot(haxis,plume.centerline[:cropX],ls='--', c='dimgrey',label='plume centerline' )
+    ax1.axhline(y = plume.zi, ls=':', c='darkgrey', label='BL height at ignition')
+    ax1.set(ylabel='height [m]')
+    ax1.set(xlim=[0,axMax],ylim=[0,pmlvls[-1]],aspect='equal')
+    ax1.legend()
+    # ---heat flux
+    ln = axh1.plot(haxis, fireCS[:cropX], 'r-') #this plots heat flux on last frame not the mean used for I
+    axh1.set_ylabel('fire heat flux $[kW m^{-2}]$', color='r')
+    axh1.set(xlim=[0,axMax],ylim=[0,150])
+    axh1.tick_params(axis='y', colors='red')
+    ax1.text(0.02, 0.9, '(a)', horizontalalignment='center', verticalalignment='center', transform=ax1.transAxes, weight='bold')
+
+
+    ax2=fig.add_subplot(gs[1])
+    fim = ax2.imshow(flux2D[75:175,0:75],cmap=plt.cm.YlOrRd, extent=[0,3000,3000,7000],vmin=0, vmax = 150)
+    cbarif = fig.colorbar(fim, orientation='vertical')
+    cbarif.set_label('heat flux [$kW / m^2$]')
+    ax2.set(xlabel='x distance [m]',ylabel='y distance [m]',aspect='equal')
+    ax2.text(0.1, 0.93, '(b)', horizontalalignment='center', verticalalignment='center', transform=ax2.transAxes, weight='bold')
+
+
+    # ax3=fig.add_subplot(gs[2])
+    # l1 = ax3.fill_between(haxis, 0, 1, where=stablePMmask[:cropX], color='grey', alpha=0.4, transform=ax3.get_xaxis_transform(), label='averaging window')
+    # ax3.set(xlim=[0,axMax],ylim=[0,3200], ylabel='height [m]',xlabel='distance [m]')
+    # l3, = ax3.plot(haxis,smoothCenterline[:cropX], label='smoothed centerline height ', color='C2')
+    # l2, = ax3.plot(haxis,centerline[:cropX], label='raw centerline height', color='C4',linestyle=':')
+    # ax32 = ax3.twinx()
+    # ax32.set(xlim=[0,axMax],xlabel='distance [m]')
+    # l4, = plt.plot(haxis, pmCtr[:cropX]/1000, label='concentration gradient', color='C1',linewidth=1)
+    # plt.legend(handles = [l1,l2,l3,l4])
+    # ax3.text(0.02, 0.93, '(c)', horizontalalignment='center', verticalalignment='center', transform=ax3.transAxes, weight='bold')
+    # ax32.tick_params(axis='y',colors='C1')
+    # ax32.set_ylabel('concentration gradient [ppm]', color='C1')
+
+    ax4=fig.add_subplot(gs[3])
+    plt.plot(plume.profile/1000, config.interpZ,label=' PM profile')
+    ax4.set(xlabel='CWI concentration [mg/kg]',ylabel='height [m]')
+    ax4.fill_betweenx(config.interpZ, plume.quartiles[0]/1000, plume.quartiles[1]/1000, alpha=0.35,label='IQR')
+    ax4.axhline(y = plume.zCL, ls='--', c='black', label='z$_{CL}$')
+    ax4.text(0.1, 0.93, '(d)', horizontalalignment='center', verticalalignment='center', transform=ax4.transAxes, weight='bold')
+
+    plt.legend()
+    plt.tight_layout(rect=[0, 0, 1, 0.95])
+    # plt.show()
+    plt.savefig(figpath + 'zcl%s.pdf' %plume.name)
+    plt.close()
+
+
 def plot_soundings(all_plumes):
 
     #create a storage directory for plots

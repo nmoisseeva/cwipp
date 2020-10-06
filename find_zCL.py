@@ -27,7 +27,6 @@ imp.reload(Plume)
 import graphics
 imp.reload(graphics)
 
-
 RunList = [i for i in config.tag if i not in config.exclude_bad]         #load a list of cases
 runCnt = len(RunList)                                                  #count number of cases
 
@@ -53,6 +52,10 @@ for nCase,Case in enumerate(RunList):
     #make plots, if necessary
     if config.plot_profiles:
         graphics.plot_profiles(plume,config.interpZ, csdict['w'][-1,:,:], csdict['temp'][-1,:,:])
+    if config.plot_conservedvars:
+        graphics.plot_conservedvars(plume,csdict['temp'][-1,:,:],pm)
+    if config.plot_zcl:
+        graphics.plot_zcl(plume,pm,csdict['ghfx'][-1,:],csdict['ghfx2D'][-1,:,:])
 
     all_plumes.append(plume)
 

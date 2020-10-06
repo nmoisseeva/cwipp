@@ -100,7 +100,7 @@ class Plume:
 
         #mask and pad the heat source ------------------------
         upwind_padding = int(depth/config.dx)
-        downwind_padding = int(1000/config.dx)              #assumes ground is not heated beyont 1km downwind
+        downwind_padding = int(2000/config.dx)              #assumes ground is not heated beyont 1km downwind
         masked_flux = ma.masked_less_equal(np.pad(flux2D,((0,0),(0,0),(upwind_padding,0)), 'constant',constant_values=0),1)
 
         cs_flux = np.nanmean(masked_flux,1)                         #get mean cross section for each timestep
@@ -163,6 +163,10 @@ class LESplume(Plume):
         2D array with columns corresponding to Q1 and Q3 profiles [concentration]
     zCL : float
         plume injection height [m]
+    centerline: ndarray
+        masked array containing height indices of plume centerline
+    ctr_idx: list
+        list of vertical indecies correponding to centerline height
     THzCL : float
         ambient potential temperature at zCL [K]
 
@@ -189,9 +193,17 @@ class LESplume(Plume):
             2D array with columns corresponding to Q1 and Q3 profiles
         zCL : float
             plume injection height [m]
+        centerline: ndarray
+            masked array containing height indices of plume centerline
+        ctr_idx: list
+            list of vertical indecies correponding to centerline height
         THzCL : float
             ambient potential temperature at zCL [K]
         """
+
+
+        import warnings
+        warnings.filterwarnings("ignore")
 
         #set up dimensions
         dimZ, dimX = np.shape(pm)     #get shape of data
@@ -200,17 +212,35 @@ class LESplume(Plume):
         #locate centerline
         ctrZidx = pm.argmax(0)                          #locate maxima along height
         ctrXidx = pm.argmax(1)                          #locate maxima downwind
-        pmCtr = np.array([pm[ctrZidx[nX],nX] for nX in range(dimX)])                #get concentration along the centerline
+        i_zi = np.argmin(abs(pmlvls - self.zi))
 
-        xmax,ymax = np.nanargmax(ctrZidx), np.nanmax(ctrZidx)                       #get location of maximum centerline height
-        centerline = ma.masked_where(pmlvls[ctrZidx] == 0, pmlvls[ctrZidx])         #make sure centerline is only calculated inside the plume
-        centerline.mask[:int(1000/dx)] = True
+        ctr_idx = []
+        for nX in range(dimX):
+            if nX <  ctrXidx[0]:
+                idx = 0
+            elif nX < ctrXidx[i_zi]:
+                idx = pm[:i_zi,:].argmax(0)[nX]
+                closestZ = np.argmin(abs(ctrXidx - nX))
+                if idx > closestZ or idx==0:
+                    if closestZ < i_zi:
+                        idx = closestZ
+            else:
+                idx = ctrZidx[nX]
+            ctr_idx.append(idx)
 
+
+        PMctr = np.array([pm[ctr_idx[nX],nX] for nX in range(dimX)])                #get concentration along the centerline
+
+        xmax,ymax = np.nanargmax(ctr_idx), np.nanmax(ctr_idx)                       #get location of maximum centerline height
+        centerline = ma.masked_where(pmlvls[ctr_idx] == 0, pmlvls[ctr_idx])         #make sure centerline is only calculated inside the plume
+        centerline.mask[:int(1000/config.dx)] = True
+        self.centerline = centerline
+        self.ctr_idx = ctr_idx
         filter_window = max(int(utils.read_tag('W',[self.name])*10+1),51)
         smoothCenterline = savgol_filter(centerline, filter_window, 3)              #smooth centerline height
 
         #calculate concentration changes along the centerline
-        dPMdX = pmCtr[1:]-pmCtr[0:-1]
+        dPMdX = PMctr[1:]-PMctr[0:-1]
         smoothPM = savgol_filter(dPMdX, filter_window, 3)
 
         #find where profile is quasi-stationary
@@ -236,23 +266,38 @@ class LESplume(Plume):
                                     nX > np.nanargmax(smoothPM) else\
                                     False for nX in range(dimX-1) ]
 
+        if sum(stablePMmask) == 0:
+            stablePMmask = [True if abs(smoothPM[nX])< np.nanmax(smoothPM)*0.1 and \
+                                    nX > np.nanargmax(centerline[~centerline.mask][:-50]) and\
+                                    nX > np.nanargmax(smoothPM) else\
+                                    False for nX in range(dimX-1) ]
+            print('ANOTHER WEIRD PLUME')
+
         stablePM = pm[:,1:][:,stablePMmask]
         stableProfile = np.median(stablePM,1)
-
         #find IQR
         pmQ1 = np.percentile(stablePM,25,axis = 1)
         pmQ3 = np.percentile(stablePM,75,axis = 1)
-        interpQ1 = interp1d(pmlvls,pmQ1,fill_value='extrapolate')(interpZ)
-        interpQ3 = interp1d(pmlvls,pmQ3,fill_value='extrapolate')(interpZ)
+        interpQ1 = interp1d(pmlvls,pmQ1,fill_value='extrapolate')(config.interpZ)
+        interpQ3 = interp1d(pmlvls,pmQ3,fill_value='extrapolate')(config.interpZ)
+
+        # #make conserved variable plots, if requested
+        # if kwargs is not None:
+        #     if 'conserved_vars' in kwargs['plots']:
+        #         graphics.plot_conservedvars(self,Tctr,PMctr, centerline)
+        #     # elif 'zcl' in kwargs['plots']:
+        #     #     graphics.plot_zcl(self,, )
+
 
         #save attributes for quasi-stationary profile
-        self.profile = interp1d(pmlvls,stableProfile,fill_value='extrapolate')(interpZ)
+        self.profile = interp1d(pmlvls,stableProfile,fill_value='extrapolate')(config.interpZ)
         self.quartiles = np.array([interpQ1,interpQ3])
-
+        self.centerline = centerline
+        self.ctr_idx = ctr_idx
 
         #calculate injection height variables ---------------------------
         zCL = np.mean(smoothCenterline[1:][stablePMmask])    #injection height is where the centerline is stable and concentration doesn't change
-        i_zCL = np.argmin(abs(interpZ - zCL))
+        i_zCL = np.argmin(abs(config.interpZ - zCL))
         THzCL = self.sounding[i_zCL]
 
         self.zCL = zCL

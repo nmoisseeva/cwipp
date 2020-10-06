@@ -37,6 +37,7 @@ exclude_bad = ['W5F4R0','W5F13R0']
 #common analysis variables
 g = 9.81                        #gravity constant
 PMcutoff = 20                   #minimum value for plume edge
+
 zstep = 20                      #height interpolation step for analysis
 interpZ = np.arange(0, 4001, zstep) #set up interpolated vertical profile
 BLfrac = 0.75                   #fraction of BL height to use as reference height z_s (default = 0.75)
@@ -52,6 +53,9 @@ ign_over = 20                   #number of history intervals exluded from analys
 
 #which plots to make
 plot_profiles = 1
+plot_conservedvars = 1
+plot_zcl = 1
+
 
 #model cross-evaluation variables
 trials = 10             #number of times to rerun the model
