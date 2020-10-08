@@ -3,6 +3,8 @@ import config
 from scipy.signal import savgol_filter
 from scipy.interpolate import interp1d
 import utils
+import graphics
+
 
 
 class Plume:
@@ -72,7 +74,7 @@ class Plume:
         self.THs = THs
 
 
-    def get_I(self, flux2D, depth, *Us):
+    def get_I(self, flux2D, length, *Us):
         """
         Finds cross-wind fireline intensity parameter I
         ...
@@ -80,8 +82,8 @@ class Plume:
         -----------
         flux2D: ndarray
             3D (time,y,x) or 2D (y,x) array containing heat flux values [kW m-2]
-        depth: float
-            maximum cross-wind depth of the fire over the entire timespan [m]
+        length: float
+            maximum cross-wind length of the fire over the entire timespan [m]
         Us: float, optional
             surface wind direction [deg, relative to y axis] NOT CURRENTLY IMPLEMENTED!
 
@@ -99,7 +101,7 @@ class Plume:
             raise ValueError('Too few dimensions: need 3D array (time,y,x)')
 
         #mask and pad the heat source ------------------------
-        upwind_padding = int(depth/config.dx)
+        upwind_padding = int(length/config.dx)
         downwind_padding = int(2000/config.dx)              #assumes ground is not heated beyont 1km downwind
         masked_flux = ma.masked_less_equal(np.pad(flux2D,((0,0),(0,0),(upwind_padding,0)), 'constant',constant_values=0),1)
 
@@ -176,7 +178,7 @@ class LESplume(Plume):
         Finds quasi-stationary downwind profile and its IQR, extracts injection height and associated variables
     """
 
-    def get_zCL(self, pm):
+    def get_zCL(self, pm, **kwargs):
         """
         Finds quasi-stationary downwind profile and its IQR, extracts injection height and associated variables
 
@@ -200,7 +202,6 @@ class LESplume(Plume):
         THzCL : float
             ambient potential temperature at zCL [K]
         """
-
 
         import warnings
         warnings.filterwarnings("ignore")
@@ -234,8 +235,7 @@ class LESplume(Plume):
         xmax,ymax = np.nanargmax(ctr_idx), np.nanmax(ctr_idx)                       #get location of maximum centerline height
         centerline = ma.masked_where(pmlvls[ctr_idx] == 0, pmlvls[ctr_idx])         #make sure centerline is only calculated inside the plume
         centerline.mask[:int(1000/config.dx)] = True
-        self.centerline = centerline
-        self.ctr_idx = ctr_idx
+
         filter_window = max(int(utils.read_tag('W',[self.name])*10+1),51)
         smoothCenterline = savgol_filter(centerline, filter_window, 3)              #smooth centerline height
 
@@ -271,8 +271,6 @@ class LESplume(Plume):
                                     nX > np.nanargmax(centerline[~centerline.mask][:-50]) and\
                                     nX > np.nanargmax(smoothPM) else\
                                     False for nX in range(dimX-1) ]
-            print('ANOTHER WEIRD PLUME')
-
         stablePM = pm[:,1:][:,stablePMmask]
         stableProfile = np.median(stablePM,1)
         #find IQR
@@ -281,27 +279,26 @@ class LESplume(Plume):
         interpQ1 = interp1d(pmlvls,pmQ1,fill_value='extrapolate')(config.interpZ)
         interpQ3 = interp1d(pmlvls,pmQ3,fill_value='extrapolate')(config.interpZ)
 
-        # #make conserved variable plots, if requested
-        # if kwargs is not None:
-        #     if 'conserved_vars' in kwargs['plots']:
-        #         graphics.plot_conservedvars(self,Tctr,PMctr, centerline)
-        #     # elif 'zcl' in kwargs['plots']:
-        #     #     graphics.plot_zcl(self,, )
-
-
         #save attributes for quasi-stationary profile
         self.profile = interp1d(pmlvls,stableProfile,fill_value='extrapolate')(config.interpZ)
         self.quartiles = np.array([interpQ1,interpQ3])
         self.centerline = centerline
         self.ctr_idx = ctr_idx
 
-        #calculate injection height variables ---------------------------
+        #calculate injection height variables
         zCL = np.mean(smoothCenterline[1:][stablePMmask])    #injection height is where the centerline is stable and concentration doesn't change
         i_zCL = np.argmin(abs(config.interpZ - zCL))
         THzCL = self.sounding[i_zCL]
 
         self.zCL = zCL
         self.THzCL = THzCL
+
+        #make plots, if requested
+        if kwargs is not None:
+            if kwargs['plot']:
+                fireCS = kwargs['csdict']['ghfx'][-1,:]
+                flux2D = kwargs['csdict']['ghfx2D'][-1,:,:]
+                graphics.plot_zcl(self,pm,fireCS,flux2D,stablePMmask,smoothCenterline)
 
 class MODplume(Plume):
     """

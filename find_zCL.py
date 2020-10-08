@@ -42,7 +42,7 @@ for nCase,Case in enumerate(RunList):
 
     #get quasi-stationary profile
     pm = ma.masked_where(csdict['pm25'][-1,:,:] <= config.PMcutoff, csdict['pm25'][-1,:,:] ) #mask all non-plume cells
-    plume.get_zCL(pm)
+    plume.get_zCL(pm,plot=config.plot_zcl,csdict=csdict)
     plume.classify()
 
     #estimate fire intensity
@@ -54,8 +54,6 @@ for nCase,Case in enumerate(RunList):
         graphics.plot_profiles(plume,config.interpZ, csdict['w'][-1,:,:], csdict['temp'][-1,:,:])
     if config.plot_conservedvars:
         graphics.plot_conservedvars(plume,csdict['temp'][-1,:,:],pm)
-    if config.plot_zcl:
-        graphics.plot_zcl(plume,pm,csdict['ghfx'][-1,:],csdict['ghfx2D'][-1,:,:])
 
     all_plumes.append(plume)
 

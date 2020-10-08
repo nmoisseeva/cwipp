@@ -11,6 +11,7 @@ import os.path
 from matplotlib import ticker
 from scipy.stats import linregress
 from scipy.interpolate import interp1d
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 import config
 import utils
 from matplotlib import gridspec
@@ -84,7 +85,7 @@ def plot_conservedvars(plume,T,pm):
     plt.savefig(figpath + 'CTRmixing_%s.pdf' %plume.name)
     plt.close()
 
-def plot_zcl(plume,pm,fireCS,flux2D):
+def plot_zcl(plume,pm,fireCS,flux2D,stablePMmask,smoothCenterline):
 
     dimZ, dimX = np.shape(pm)     #get shape of data
     pmlvls = np.arange(0,dimZ*config.dz,config.dz)
@@ -93,6 +94,7 @@ def plot_zcl(plume,pm,fireCS,flux2D):
     haxis = np.arange(cropX)*config.dx
     PMmg = pm/1000.                                        #smoke concentration in ppm
     maxPM = int(np.max(PMmg))
+    PMctr = np.array([pm[plume.ctr_idx[nX],nX] for nX in range(dimX)])
 
 
     #create a storage directory for plots
@@ -107,21 +109,24 @@ def plot_zcl(plume,pm,fireCS,flux2D):
     ax1=fig.add_subplot(gs[0])
     axh1=ax1.twinx()
     # ---cwi smoke  and colorbar
-    im = ax1.imshow(PMmg[:,:cropX], origin='lower', extent=[0,axMax,0,pmlvls[-1]],cmap=plt.cm.cubehelix_r,vmin=0, vmax=maxPM/10)
-    cbari = fig.colorbar(im, orientation='horizontal',aspect=60, shrink=0.5)
-    cbari.set_label('CWI smoke [mg/kg]')
+    im = ax1.imshow(PMmg[:,:cropX], origin='lower', extent=[0,axMax,0,pmlvls[-1]],cmap=plt.cm.cubehelix_r,vmin=0, vmax=maxPM/10, aspect='auto')
+    # cbari = fig.colorbar(im, orientation='horizontal',aspect=60, shrink=0.5)
+    cbaxes = inset_axes(ax1, width="30%", height="5%", loc=1)
+    cbari = fig.colorbar(im, cax=cbaxes, orientation='horizontal',label='CWI smoke [mg/kg]')
+
     ax1.plot(haxis,plume.centerline[:cropX],ls='--', c='dimgrey',label='plume centerline' )
     ax1.axhline(y = plume.zi, ls=':', c='darkgrey', label='BL height at ignition')
-    ax1.set(ylabel='height [m]')
-    ax1.set(xlim=[0,axMax],ylim=[0,pmlvls[-1]],aspect='equal')
-    ax1.legend()
+    ax1.set(ylabel='height [m]',xlabel='distance [m]')
+    ax1.set(xlim=[0,axMax],ylim=[0,pmlvls[-1]])
+    ax1.legend(loc=4)
     # ---heat flux
     ln = axh1.plot(haxis, fireCS[:cropX], 'r-') #this plots heat flux on last frame not the mean used for I
     axh1.set_ylabel('fire heat flux $[kW m^{-2}]$', color='r')
-    axh1.set(xlim=[0,axMax],ylim=[0,150])
+    axh1.set(xlim=[0,axMax], ylim = [0,150])
     axh1.tick_params(axis='y', colors='red')
     ax1.text(0.02, 0.9, '(a)', horizontalalignment='center', verticalalignment='center', transform=ax1.transAxes, weight='bold')
 
+# plt.colorbar( ticks=[0.,1],)
 
     ax2=fig.add_subplot(gs[1])
     fim = ax2.imshow(flux2D[75:175,0:75],cmap=plt.cm.YlOrRd, extent=[0,3000,3000,7000],vmin=0, vmax = 150)
@@ -131,18 +136,18 @@ def plot_zcl(plume,pm,fireCS,flux2D):
     ax2.text(0.1, 0.93, '(b)', horizontalalignment='center', verticalalignment='center', transform=ax2.transAxes, weight='bold')
 
 
-    # ax3=fig.add_subplot(gs[2])
-    # l1 = ax3.fill_between(haxis, 0, 1, where=stablePMmask[:cropX], color='grey', alpha=0.4, transform=ax3.get_xaxis_transform(), label='averaging window')
-    # ax3.set(xlim=[0,axMax],ylim=[0,3200], ylabel='height [m]',xlabel='distance [m]')
-    # l3, = ax3.plot(haxis,smoothCenterline[:cropX], label='smoothed centerline height ', color='C2')
-    # l2, = ax3.plot(haxis,centerline[:cropX], label='raw centerline height', color='C4',linestyle=':')
-    # ax32 = ax3.twinx()
-    # ax32.set(xlim=[0,axMax],xlabel='distance [m]')
-    # l4, = plt.plot(haxis, pmCtr[:cropX]/1000, label='concentration gradient', color='C1',linewidth=1)
-    # plt.legend(handles = [l1,l2,l3,l4])
-    # ax3.text(0.02, 0.93, '(c)', horizontalalignment='center', verticalalignment='center', transform=ax3.transAxes, weight='bold')
-    # ax32.tick_params(axis='y',colors='C1')
-    # ax32.set_ylabel('concentration gradient [ppm]', color='C1')
+    ax3=fig.add_subplot(gs[2])
+    l1 = ax3.fill_between(haxis, 0, 1, where=stablePMmask[:cropX], color='grey', alpha=0.4, transform=ax3.get_xaxis_transform(), label='averaging window')
+    ax3.set(xlim=[0,axMax],ylim=[0,3200], ylabel='height [m]',xlabel='distance [m]')
+    l3, = ax3.plot(haxis,smoothCenterline[:cropX], label='smoothed centerline height ', color='C2')
+    l2, = ax3.plot(haxis,plume.centerline[:cropX], label='raw centerline height', color='C4',linestyle=':')
+    ax32 = ax3.twinx()
+    ax32.set(xlim=[0,axMax],xlabel='distance [m]')
+    l4, = plt.plot(haxis, PMctr[:cropX]/1000, label='concentration gradient', color='C1',linewidth=1)
+    plt.legend(handles = [l1,l2,l3,l4])
+    ax3.text(0.02, 0.93, '(c)', horizontalalignment='center', verticalalignment='center', transform=ax3.transAxes, weight='bold')
+    ax32.tick_params(axis='y',colors='C1')
+    ax32.set_ylabel('concentration gradient [ppm]', color='C1')
 
     ax4=fig.add_subplot(gs[3])
     plt.plot(plume.profile/1000, config.interpZ,label=' PM profile')
@@ -176,7 +181,6 @@ def plot_soundings(all_plumes):
 
     Rtag = np.array([i for i in utils.read_tag('R',names_list)])  #list of initialization rounds (different soundings)
     for R in set(Rtag):
-        print(R)
         for Case in np.array(soundings)[Rtag==R]:
             lR = plt.plot(Case, config.interpZ, color='C%s' %R, linewidth=1, label='R%s' %R)
         leg_handles.extend(lR)
