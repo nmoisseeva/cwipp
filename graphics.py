@@ -102,7 +102,7 @@ def plot_zcl(plume,pm,fireCS,flux2D,stablePMmask,smoothCenterline):
     if not os.path.exists(figpath):
         os.makedirs(figpath)
 
-    fig = plt.figure(figsize=(11,5))
+    fig = plt.figure(figsize=(12,5))
     gs = fig.add_gridspec(ncols=2, nrows=2,width_ratios=[4,1])
     plt.suptitle('%s' %plume.name)
 
@@ -110,14 +110,13 @@ def plot_zcl(plume,pm,fireCS,flux2D,stablePMmask,smoothCenterline):
     axh1=ax1.twinx()
     # ---cwi smoke  and colorbar
     im = ax1.imshow(PMmg[:,:cropX], origin='lower', extent=[0,axMax,0,pmlvls[-1]],cmap=plt.cm.cubehelix_r,vmin=0, vmax=maxPM/10, aspect='auto')
-    # cbari = fig.colorbar(im, orientation='horizontal',aspect=60, shrink=0.5)
     cbaxes = inset_axes(ax1, width="30%", height="5%", loc=1)
     cbari = fig.colorbar(im, cax=cbaxes, orientation='horizontal',label='CWI smoke [mg/kg]')
-
+    ax1.set(xlim=[0,axMax],ylim=[0,pmlvls[-1]])
     ax1.plot(haxis,plume.centerline[:cropX],ls='--', c='dimgrey',label='plume centerline' )
     ax1.axhline(y = plume.zi, ls=':', c='darkgrey', label='BL height at ignition')
     ax1.set(ylabel='height [m]',xlabel='distance [m]')
-    ax1.set(xlim=[0,axMax],ylim=[0,pmlvls[-1]])
+
     ax1.legend(loc=4)
     # ---heat flux
     ln = axh1.plot(haxis, fireCS[:cropX], 'r-') #this plots heat flux on last frame not the mean used for I

@@ -186,6 +186,10 @@ class LESplume(Plume):
         ----------
         pm : ndarray
             2D array (z,x) of pm cross-section
+        plot: boolean, optional
+            create a multi-panel plot of the method, requires csdict argument to follow
+        csdict: dict, optional
+            cross-section dictionary for the plume, if plotting is required
 
         Returns:
         --------
@@ -219,7 +223,9 @@ class LESplume(Plume):
         for nX in range(dimX):
             if nX <  ctrXidx[0]:
                 idx = 0
-            elif nX < ctrXidx[i_zi]:
+            # elif nX < ctrXidx[i_zi]:
+            elif ctr_idx[-1]<i_zi-1:
+
                 idx = pm[:i_zi,:].argmax(0)[nX]
                 closestZ = np.argmin(abs(ctrXidx - nX))
                 if idx > closestZ or idx==0:
