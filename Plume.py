@@ -323,7 +323,7 @@ class MODplume(Plume):
         Applies iterative solution to parameterize plume injection height
     """
 
-    def iterate(self, C, biasFit=None):
+    def iterate(self, C, biasFit=None, **kwargs):
         r"""
         Applies iterative solution to parameterize plume injection height
         ...
@@ -334,6 +334,8 @@ class MODplume(Plume):
             Empirical constant for $z^\prime$ equation
         biasFit : array_like, optional
             bias fit parameters. Default is m = 1, b = 0
+        argout: boolean, optional
+            flag to output return arguments. If False(default) they are assigned as attributes
 
         Returns:
         -------
@@ -358,8 +360,12 @@ class MODplume(Plume):
 
         THzCL = self.sounding[i_zCL]
 
-        self.THzCL = THzCL
-        self.zCL = float(zCL)
+
+        if kwargs['argout']:
+            return float(zCL), THzCL
+        else:
+            self.THzCL = THzCL
+            self.zCL = float(zCL)
 
     def explicit_solution(self, C, Gamma, ze, biasFit=None):
         r"""

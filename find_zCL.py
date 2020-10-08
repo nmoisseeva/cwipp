@@ -182,18 +182,18 @@ for nTrial in range(config.trials):
     for nTest in TestSet:
         testPlume = Plume.MODplume(penetrative_plumes[nTest].name)
         testPlume.I = penetrative_plumes[nTest].I
-        test_estimate = testPlume.iterate(C, trialFit)              #####STOPPPED HERE: NEED TO ADD POLYMORPHISM, TO PROVIDE OUTPUT TO FUNCITON (instead of assigning attributes)
+        test_estimate, TH_dump = testPlume.iterate(C, trialFit, argout=True)              #####STOPPPED HERE: NEED TO ADD POLYMORPHISM, TO PROVIDE OUTPUT TO FUNCITON (instead of assigning attributes)
         truth = penetrative_plumes[nTest].zCL
         test_truth.append(truth)
         test_error.append(truth - test_estimate)
-        fuel_cat.append(utils.read_tag('F',np.array(penetrative_plumes[nTest].name)))
+        fuel_cat.append(utils.read_tag('F',[penetrative_plumes[nTest].name])[0])
 
-    error = test_truth  - test_error                         #calculate error between model and 'truth'
-    ModelError.append(error)                                        #store model error
-    TrueTrialZcl.append(test_truth)                           #store true subset
+    # error = np.array(test_truth)  - np.array(test_error)                         #calculate error between model and 'truth'
+    ModelError.append(test_error)                              #store model error
+    TrialZcl.append(test_truth)                           #store true subset
     TrialFuel.append(fuel_cat)
 
-flatTrialZcl  = np.concatenate(TrueTrialZcl)                #flatten test array of injection heights
+flatTrialZcl  = np.concatenate(TrialZcl)                #flatten test array of injection heights
 flatModelError = np.concatenate(ModelError)                     #flatten model error
 flatTrialFuel = np.concatenate(TrialFuel)
 
@@ -202,7 +202,7 @@ plt.figure(figsize=(6,6))
 gs = gridspec.GridSpec(2, 2)
 ax0 = plt.subplot(gs[0,0:])
 plt.title('(a) TRIAL ERROR')
-plt.boxplot(ModelError)
+plt.boxplot(np.array(ModelError))
 plt.hlines(0,0,11,colors='grey',linestyles='dashed')
 ax0.set(xlabel='trial no.', ylabel='error in zCL [m]',ylim=[-200,200])
 
@@ -225,12 +225,12 @@ plt.show()
 
 plt.figure()
 plt.title('ERROR AS A FUNCTION OF FUEL (TRIALS)')
-plt.scatter(flatTrialFuel,flatModelError)
+plt.scatter(flatTrialFuel,flatModelError, c=flatTrialZcl)
 plt.hlines(0,0,14,colors='grey',linestyles='dashed')
 ax = plt.gca()
 # for i, txt in enumerate(flatTrialName):
 #     ax.annotate(txt, (flatTrialFuel[i], flatModelError[i]),fontsize=6)
-ax.set(xlabel='fuel category', ylabel='error [m]',ylim=[-100,150])
+ax.set(xlabel='fuel category', ylabel='error [m]')
 plt.colorbar().set_label('$z_{CL} - z_s$ [m]')
 plt.savefig(plume.figdir + 'injectionModel/FuelvsErrorHeight_TRIALS.pdf')
 plt.show()
