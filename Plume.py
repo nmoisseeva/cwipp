@@ -1,5 +1,7 @@
 import numpy as np
 import config
+from numpy import ma
+from scipy.optimize import fsolve
 from scipy.signal import savgol_filter
 from scipy.interpolate import interp1d
 import utils
@@ -58,7 +60,7 @@ class Plume:
 
         #get BL height
         zi = utils.get_zi(T0,config.dz)                    #calculate BL height
-        zs = zi * BLfrac
+        zs = zi * config.BLfrac
 
         #interpolate sounding to analysis levels
         metlvls = np.arange(0,len(T0)*config.dz,config.dz)
@@ -361,8 +363,12 @@ class MODplume(Plume):
         THzCL = self.sounding[i_zCL]
 
 
-        if kwargs['argout']:
-            return float(zCL), THzCL
+        if 'argout' in kwargs.keys():
+            if kwargs['argout']:
+                return float(zCL), THzCL
+            else:
+                self.THzCL = THzCL
+                self.zCL = float(zCL)
         else:
             self.THzCL = THzCL
             self.zCL = float(zCL)
