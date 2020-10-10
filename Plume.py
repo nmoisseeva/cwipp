@@ -217,9 +217,9 @@ class LESplume(Plume):
         pmlvls = np.arange(0,dimZ*config.dz,config.dz)
 
         #locate centerline
-        ctrZidx = pm.argmax(0)                          #locate maxima along height
-        ctrXidx = pm.argmax(1)                          #locate maxima downwind
-        i_zi = np.argmin(abs(pmlvls - self.zi))
+        ctrZidx = np.nanargmax(pm,0)                          #locate maxima along height
+        ctrXidx = np.nanargmax(pm,1)                          #locate maxima downwind
+        i_zi = np.nanargmin(abs(pmlvls - self.zi))
 
         ctr_idx = []
         for nX in range(dimX):
@@ -227,9 +227,8 @@ class LESplume(Plume):
                 idx = 0
             # elif nX < ctrXidx[i_zi]:
             elif ctr_idx[-1]<i_zi-1:
-
-                idx = pm[:i_zi,:].argmax(0)[nX]
-                closestZ = np.argmin(abs(ctrXidx - nX))
+                idx = np.nanargmax(pm[:i_zi,:],0)[nX]
+                closestZ = np.nanargmin(abs(ctrXidx - nX))
                 if idx > closestZ or idx==0:
                     if closestZ < i_zi:
                         idx = closestZ
@@ -300,9 +299,9 @@ class LESplume(Plume):
 
         self.zCL = zCL
         self.THzCL = THzCL
-
+        #
         #make plots, if requested
-        if kwargs is not None:
+        if len(kwargs.keys()) > 0:
             if kwargs['plot']:
                 fireCS = kwargs['csdict']['ghfx'][-1,:]
                 flux2D = kwargs['csdict']['ghfx2D'][-1,:,:]
