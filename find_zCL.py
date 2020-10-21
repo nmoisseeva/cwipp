@@ -29,7 +29,7 @@ imp.reload(graphics)
 
 RunList = [i for i in config.tag if i not in config.exclude_bad]         #load a list of cases
 runCnt = len(RunList)                                                  #count number of cases
-
+exclude_runs = ['W5F9R1','W5F8R3','W5F9R3','W5F1R3','W5F1R7T','W5F8R7T','W5F9R7T']
 #======================perform main analysis for all runs first===================
 print('==========================LES analysis==========================')
 #loop through all LES cases
@@ -87,6 +87,7 @@ for plume in penetrative_plumes:
 firstGuess = np.array(zPrimeGuess)[:,np.newaxis]
 C, _, _, _ = np.linalg.lstsq(firstGuess, zPrimeTrue)
 C = float(C)
+C = 1
 
 #obtain bias correction factors
 zCLmodel, zCLtrue = [],[]
@@ -105,16 +106,20 @@ graphics.injection_model(penetrative_plumes, C, biasFit)
 #===========test iterative solution, do bias correction===============
 imp.reload(Plume)
 raw_error, unbiased_error, true_zCL = [], [], []
-for plume in penetrative_plumes:
-    raw_plume = Plume.MODplume(plume.name)
-    raw_plume.I = plume.I
-    raw_plume.iterate(C)
-    unbiased_plume = Plume.MODplume(plume.name)
-    unbiased_plume.I = plume.I
-    unbiased_plume.iterate(C,biasFit)
-    true_zCL.append(plume.zCL)
-    raw_error.append(plume.zCL - raw_plume.zCL)
-    unbiased_error.append(plume.zCL - unbiased_plume.zCL)
+# for plume in penetrative_plumes:
+for plume in all_plumes:
+    if plume.name in exclude_runs:
+        continue
+    else:
+        raw_plume = Plume.MODplume(plume.name)
+        raw_plume.I = plume.I
+        raw_plume.iterate(C)
+        unbiased_plume = Plume.MODplume(plume.name)
+        unbiased_plume.I = plume.I
+        unbiased_plume.iterate(C,biasFit)
+        true_zCL.append(plume.zCL)
+        raw_error.append(plume.zCL - raw_plume.zCL)
+        unbiased_error.append(plume.zCL - unbiased_plume.zCL)
 
 #plot bias correction statistics on iterative solution
 graphics.bias_correction(raw_error, unbiased_error, true_zCL, figname='IterativeSolution')

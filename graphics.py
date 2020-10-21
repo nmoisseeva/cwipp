@@ -213,7 +213,7 @@ def injection_model(all_plumes,C,biasFit):
     # ax.set(ylabel = r'true $z_{CL}$ [m]', xlabel = r'model $z_{CL}$ [m]',xlim = [400,3200], ylim = [400,3200])
     plt.colorbar(label=r'fireline intensity [K m$^2$/s]')
     plt.plot(np.sort(modelled_array),biasFit[0]*np.sort(modelled_array)+biasFit[1], color='black', label='linear regression fit')
-    plt.plot(np.sort(modelled_array),np.sort(modelled_array), linestyle = 'dashed', color='grey', label='unity line')
+    plt.plot(np.sort(modelled_array),np.sort(modelled_array), linestyle = 'dashed', color='grey', label='1:1 line')
     plt.legend()
     plt.savefig(figpath + 'MainInjection_allPlumes.pdf')
     plt.close()
@@ -226,12 +226,14 @@ def dimensionless_groups(HStar,zStar,cI):
 
     plt.figure()
     plt.title('DIMENSIONLESS RELATIONSHIP')
-    plt.scatter(HStar,zStar,c=cI,cmap=plt.cm.plasma)
+    plt.scatter(np.array(HStar),np.array(zStar),c=cI,cmap=plt.cm.plasma)
+    plt.plot(np.arange(0,1.01,0.01),np.arange(0,1.01,0.01), linestyle = 'dashed', color='grey', label='1:1 line')
     ax = plt.gca()
     # for i, txt in enumerate(RunList):
     #     ax.annotate(txt, (HStar[i], zStar[i]),fontsize=6)
-    plt.gca().set(xlabel = r'$\overline{H}$', ylabel=r'$\overline{z}$')
+    plt.gca().set(xlabel = r'$\overline{H}$', ylabel=r'$\overline{z}$',xlim=[0,1],ylim=[0,1])
     plt.colorbar(label=r'fireline intensity [Km$^2$/s]')
+    plt.legend(loc=2)
     plt.savefig(figpath + 'DimensionlessGroups.pdf')
     plt.close()
 
