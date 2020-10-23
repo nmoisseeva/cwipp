@@ -11,9 +11,7 @@
 
 class Plume:
     r"""
-    Parent Plume class
-
-    ...
+    Parent Plume class.
 
     Attributes
     ----------
@@ -158,7 +156,7 @@ class Plume:
 class LESplume(Plume):
     """
     Child Plume class used for operating on simulated plumes with full fields available (i.e. non-predictive mode)
-    ...
+
     Attributes
     ----------
     profile : ndarray
@@ -174,10 +172,6 @@ class LESplume(Plume):
     THzCL : float
         ambient potential temperature at zCL [K]
 
-    Methods
-    -------
-    get_zCL(pm):
-        Finds quasi-stationary downwind profile and its IQR, extracts injection height and associated variables
     """
 
     def get_zCL(self, pm, **kwargs):
