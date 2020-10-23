@@ -1,0 +1,454 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plume Class &#8212; PR_model October 2020 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Plume Rise Model documentation" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-Plume">
+<span id="plume-class"></span><h1>Plume Class<a class="headerlink" href="#module-Plume" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="Plume.LESplume">
+<em class="property">class </em><code class="sig-prename descclassname">Plume.</code><code class="sig-name descname">LESplume</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Plume.LESplume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Plume.Plume" title="Plume.Plume"><code class="xref py py-class docutils literal notranslate"><span class="pre">Plume.Plume</span></code></a></p>
+<p>Child Plume class used for operating on simulated plumes with full fields available (i.e. non-predictive mode)
+…
+.. attribute:: profile</p>
+<blockquote>
+<div><p>1D vector corresponding to quasi-stationary downwind PM profile [concentration]</p>
+<dl class="field-list simple">
+<dt class="field-odd">type</dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="py attribute">
+<dt id="Plume.LESplume.quartiles">
+<code class="sig-name descname">quartiles</code><a class="headerlink" href="#Plume.LESplume.quartiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>2D array with columns corresponding to Q1 and Q3 profiles [concentration]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Plume.LESplume.zCL">
+<code class="sig-name descname">zCL</code><a class="headerlink" href="#Plume.LESplume.zCL" title="Permalink to this definition">¶</a></dt>
+<dd><p>plume injection height [m]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Plume.LESplume.centerline">
+<code class="sig-name descname">centerline</code><a class="headerlink" href="#Plume.LESplume.centerline" title="Permalink to this definition">¶</a></dt>
+<dd><p>masked array containing height indices of plume centerline</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Plume.LESplume.ctr_idx">
+<code class="sig-name descname">ctr_idx</code><a class="headerlink" href="#Plume.LESplume.ctr_idx" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of vertical indecies correponding to centerline height</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Plume.LESplume.THzCL">
+<code class="sig-name descname">THzCL</code><a class="headerlink" href="#Plume.LESplume.THzCL" title="Permalink to this definition">¶</a></dt>
+<dd><p>ambient potential temperature at zCL [K]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">get_zCL(pm):</code></dt>
+<dd><p>Finds quasi-stationary downwind profile and its IQR, extracts injection height and associated variables</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Plume.LESplume.get_zCL">
+<code class="sig-name descname">get_zCL</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pm</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Plume.LESplume.get_zCL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds quasi-stationary downwind profile and its IQR, extracts injection height and associated variables</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pm</strong> (<em>ndarray</em>) – 2D array (z,x) of pm cross-section</p></li>
+<li><p><strong>plot</strong> (<em>boolean</em><em>, </em><em>optional</em>) – create a multi-panel plot of the method, requires csdict argument to follow</p></li>
+<li><p><strong>csdict</strong> (<em>dict</em><em>, </em><em>optional</em>) – cross-section dictionary for the plume, if plotting is required</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>profile</strong> (<em>ndarray</em>) – 1D vector corresponding to quasi-stationary downwind PM profile</p></li>
+<li><p><strong>quartiles</strong> (<em>ndarray</em>) – 2D array with columns corresponding to Q1 and Q3 profiles</p></li>
+<li><p><strong>zCL</strong> (<em>float</em>) – plume injection height [m]</p></li>
+<li><p><strong>centerline</strong> (<em>ndarray</em>) – masked array containing height indices of plume centerline</p></li>
+<li><p><strong>ctr_idx</strong> (<em>list</em>) – list of vertical indecies correponding to centerline height</p></li>
+<li><p><strong>THzCL</strong> (<em>float</em>) – ambient potential temperature at zCL [K]</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="Plume.MODplume">
+<em class="property">class </em><code class="sig-prename descclassname">Plume.</code><code class="sig-name descname">MODplume</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Plume.MODplume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Plume.Plume" title="Plume.Plume"><code class="xref py py-class docutils literal notranslate"><span class="pre">Plume.Plume</span></code></a></p>
+<p>Child Plume class used for modelled plumes (i.e. predictive mode)
+…
+.. attribute:: zCL</p>
+<blockquote>
+<div><p>parameterized plume injection height [m]</p>
+<dl class="field-list simple">
+<dt class="field-odd">type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="py attribute">
+<dt id="Plume.MODplume.THzCL">
+<code class="sig-name descname">THzCL</code><a class="headerlink" href="#Plume.MODplume.THzCL" title="Permalink to this definition">¶</a></dt>
+<dd><p>ambient potential temperature at modelled zCL [K]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">iterate(self):</code></dt>
+<dd><p>Applies iterative solution to parameterize plume injection height</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Plume.MODplume.explicit_solution">
+<code class="sig-name descname">explicit_solution</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">C</span></em>, <em class="sig-param"><span class="n">Gamma</span></em>, <em class="sig-param"><span class="n">ze</span></em>, <em class="sig-param"><span class="n">biasFit</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Plume.MODplume.explicit_solution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies iterative solution to parameterize plume injection height
+…</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>C</strong> (<em>float</em>) – Empirical constant for $z^prime$ equation</p></li>
+<li><p><strong>biasFit</strong> (<em>array_like</em><em>, </em><em>optional</em>) – bias fit parameters. Default is m = 1, b = 0</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>zCL</strong> (<em>float</em>) – parameterized plume injection height [m]</p></li>
+<li><p><strong>THzCL</strong> (<em>float</em>) – ambient potential temperature at modelled zCL [K]</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Plume.MODplume.iterate">
+<code class="sig-name descname">iterate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">C</span></em>, <em class="sig-param"><span class="n">biasFit</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Plume.MODplume.iterate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies iterative solution to parameterize plume injection height
+…</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>C</strong> (<em>float</em>) – Empirical constant for $z^prime$ equation</p></li>
+<li><p><strong>biasFit</strong> (<em>array_like</em><em>, </em><em>optional</em>) – bias fit parameters. Default is m = 1, b = 0</p></li>
+<li><p><strong>argout</strong> (<em>boolean</em><em>, </em><em>optional</em>) – flag to output return arguments. If False(default) they are assigned as attributes</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>zCL</strong> (<em>float</em>) – parameterized plume injection height [m]</p></li>
+<li><p><strong>THzCL</strong> (<em>float</em>) – ambient potential temperature at modelled zCL [K]</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="Plume.Plume">
+<em class="property">class </em><code class="sig-prename descclassname">Plume.</code><code class="sig-name descname">Plume</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Plume.Plume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Parent Plume class</p>
+<p>…</p>
+<dl class="py attribute">
+<dt id="Plume.Plume.name">
+<code class="sig-name descname">name</code><a class="headerlink" href="#Plume.Plume.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>plume name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Plume.Plume.zi">
+<code class="sig-name descname">zi</code><a class="headerlink" href="#Plume.Plume.zi" title="Permalink to this definition">¶</a></dt>
+<dd><p>boundary layer height [m]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Plume.Plume.zs">
+<code class="sig-name descname">zs</code><a class="headerlink" href="#Plume.Plume.zs" title="Permalink to this definition">¶</a></dt>
+<dd><p>refernce height (zi * BLfrac) [m]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Plume.Plume.sounding">
+<code class="sig-name descname">sounding</code><a class="headerlink" href="#Plume.Plume.sounding" title="Permalink to this definition">¶</a></dt>
+<dd><p>vertical potential temperature sounding on interpolated analysis levels [K]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Plume.Plume.THs">
+<code class="sig-name descname">THs</code><a class="headerlink" href="#Plume.Plume.THs" title="Permalink to this definition">¶</a></dt>
+<dd><p>ambient potential tempreature at reference height zs [K]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Plume.Plume.I">
+<code class="sig-name descname">I</code><a class="headerlink" href="#Plume.Plume.I" title="Permalink to this definition">¶</a></dt>
+<dd><p>fireline intensity parameter [K m2 s-1]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Plume.Plume.wf">
+<code class="sig-name descname">wf</code><a class="headerlink" href="#Plume.Plume.wf" title="Permalink to this definition">¶</a></dt>
+<dd><p>characteristic fire velocity scale [m s-1]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Plume.Plume.Tau">
+<code class="sig-name descname">Tau</code><a class="headerlink" href="#Plume.Plume.Tau" title="Permalink to this definition">¶</a></dt>
+<dd><p>characteristic timescale [s]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">get_I(flux2D, \*Us):</code></dt>
+<dd><p>Finds cross-wind fireline intensity parameter I</p>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">get_wf(self):</code></dt>
+<dd><p>Applies plume rise parameterization to find characteristic time ($Tau$) and velocity ($w_f$) scales</p>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname">classify(self):</code></dt>
+<dd><p>Determine whether plume penetrates the boundary layer top or not</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Plume.Plume.classify">
+<code class="sig-name descname">classify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Plume.Plume.classify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Classifies the plume as penetrative (True) or boundary layer (False)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>penetrative</strong> – classification (True if penetrative).</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Plume.Plume.get_I">
+<code class="sig-name descname">get_I</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">flux2D</span></em>, <em class="sig-param"><span class="n">length</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">Us</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Plume.Plume.get_I" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds cross-wind fireline intensity parameter I</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>flux2D</strong> (<em>ndarray</em>) – 3D (time,y,x) or 2D (y,x) array containing heat flux values [kW m-2].</p></li>
+<li><p><strong>length</strong> (<em>float</em>) – maximum cross-wind length of the fire over the entire timespan [m].</p></li>
+<li><p><strong>Us</strong> (<em>float</em><em>, </em><em>optional</em>) – surface wind direction [deg, relative to y axis] NOT CURRENTLY IMPLEMENTED!</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>I</strong> – fireline intensity parameter [K m2 s-1]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Plume.Plume.get_wf">
+<code class="sig-name descname">get_wf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Plume.Plume.get_wf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies plume rise parameterization to find characteristic time ($Tau$) and velocity ($w_f$) scales</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>wf</strong> (<em>float</em>) – characteristic fire velocity scale [m s-1]</p></li>
+<li><p><strong>Tau</strong> (<em>float</em>) – characteristic timescale [s]</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">PR_model</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Plume Class</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Plume Rise Model documentation</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Nadya Moisseeva.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/Plume.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

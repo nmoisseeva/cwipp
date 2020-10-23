@@ -1,11 +1,11 @@
-import numpy as np
-import config
-from numpy import ma
-from scipy.optimize import fsolve
-from scipy.signal import savgol_filter
-from scipy.interpolate import interp1d
-import utils
-import graphics
+#import numpy as np
+#import config
+#from numpy import ma
+#from scipy.optimize import fsolve
+#from scipy.signal import savgol_filter
+#from scipy.interpolate import interp1d
+#import utils
+#import graphics
 
 
 
@@ -34,8 +34,8 @@ class Plume:
     Tau : float
         characteristic timescale [s]
 
-    Methods:
-    -------
+    Methods
+    --------
     get_I(flux2D, *Us):
         Finds cross-wind fireline intensity parameter I
     get_wf(self):
@@ -49,7 +49,7 @@ class Plume:
         Constructs the plume object with some inital attributes
         ...
 
-        Parameters:
+        Parameters
         -----------
         name: str
             plume name
@@ -79,20 +79,21 @@ class Plume:
     def get_I(self, flux2D, length, *Us):
         """
         Finds cross-wind fireline intensity parameter I
-        ...
-        Parameters:
+        
+        Parameters
         -----------
-        flux2D: ndarray
-            3D (time,y,x) or 2D (y,x) array containing heat flux values [kW m-2]
-        length: float
-            maximum cross-wind length of the fire over the entire timespan [m]
-        Us: float, optional
+        flux2D : ndarray
+            3D (time,y,x) or 2D (y,x) array containing heat flux values [kW m-2].
+        length : float
+            maximum cross-wind length of the fire over the entire timespan [m].
+        Us : float, optional
             surface wind direction [deg, relative to y axis] NOT CURRENTLY IMPLEMENTED!
 
-        Returns:
-        -------
+        Returns
+        ---------
         I : float
             fireline intensity parameter [K m2 s-1]
+
         """
 
         #confirm there are sufficiant dimensions
@@ -123,10 +124,9 @@ class Plume:
     def get_wf(self):
         r"""
         Applies plume rise parameterization to find characteristic time ($\Tau$) and velocity ($w_f$) scales
-        ...
 
-        Returns:
-        -------
+        Returns
+        ---------
         wf : float
             characteristic fire velocity scale [m s-1]
         Tau : float
@@ -142,11 +142,11 @@ class Plume:
     def classify(self):
         """
         Classifies the plume as penetrative (True) or boundary layer (False)
-        ...
-        Returns:
-        -------
+        
+        Returns
+        --------
         penetrative : boolean
-            classification (True if penetrative)
+            classification (True if penetrative).
         """
 
         if  self.zCL < (self.zi + (config.dz)/2):
@@ -193,7 +193,7 @@ class LESplume(Plume):
         csdict: dict, optional
             cross-section dictionary for the plume, if plotting is required
 
-        Returns:
+        Returns
         --------
         profile : ndarray
             1D vector corresponding to quasi-stationary downwind PM profile
@@ -338,7 +338,7 @@ class MODplume(Plume):
         argout: boolean, optional
             flag to output return arguments. If False(default) they are assigned as attributes
 
-        Returns:
+        Returns
         -------
         zCL : float
             parameterized plume injection height [m]
@@ -384,7 +384,7 @@ class MODplume(Plume):
         biasFit : array_like, optional
             bias fit parameters. Default is m = 1, b = 0
 
-        Returns:
+        Returns
         -------
         zCL : float
             parameterized plume injection height [m]
