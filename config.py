@@ -3,22 +3,13 @@
 #configuration settings
 
 import numpy as np
-import matplotlib.pyplot as plt
-from scipy.io import netcdf
-import imp
-from numpy import ma
-from matplotlib import ticker
-from scipy.signal import savgol_filter
-from scipy.stats import linregress
-from scipy.optimize import fsolve
-from scipy.interpolate import interp1d
 import os.path
 import glob
 
 
 #paths
 wrfdir = '/Users/nmoisseeva/data/plume/main/interp/'
-figdir = '/Users/nmoisseeva/code/plume/main/clean_code/figs/'
+figdir = '/Users/nmoisseeva/code/pr_model/figs/'
 
 #grid spacing of interpolated LES data
 dz = 40
@@ -61,10 +52,10 @@ plot_zcl = 1
 trials = 10             #number of times to rerun the model
 testPortion = 0.2       #portion of data to reserve for testing the model
 
-#model evaluation
-rxcadredata = '/Users/nmoisseeva/data/plume/rxcadre/wrfout_test_main'
-rxdispersion = '/Users/nmoisseeva/data/rxcadre/dispersion/RDS-2014-0015/Data/SmokeDispersion_L2G_20121110.csv'
-rxsfchgt = 62               #surface height MSL (m)
-rxsounding = '/Users/nmoisseeva/code/plume/main/input_sounding_rxcadre'
-rxinterpCO2 = '/Users/nmoisseeva/data/plume/main/CO2_interp_1250-1300pm.npy'
-rxlvl = np.arange(0,1700,20)
+# #model evaluation
+# rxcadredata = '/Users/nmoisseeva/data/plume/rxcadre/wrfout_test_main'
+# rxdispersion = '/Users/nmoisseeva/data/rxcadre/dispersion/RDS-2014-0015/Data/SmokeDispersion_L2G_20121110.csv'
+# rxsfchgt = 62               #surface height MSL (m)
+# rxsounding = '/Users/nmoisseeva/code/plume/main/input_sounding_rxcadre'
+# rxinterpCO2 = '/Users/nmoisseeva/data/plume/main/CO2_interp_1250-1300pm.npy'
+# rxlvl = np.arange(0,1700,20)

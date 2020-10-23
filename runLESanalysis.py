@@ -29,7 +29,7 @@ imp.reload(graphics)
 
 RunList = [i for i in config.tag if i not in config.exclude_bad]         #load a list of cases
 runCnt = len(RunList)                                                  #count number of cases
-exclude_runs = ['W5F9R1','W5F8R3','W5F9R3','W5F1R3','W5F1R7T','W5F8R7T','W5F9R7T']
+# exclude_runs = ['W5F9R1','W5F8R3','W5F9R3','W5F1R3','W5F1R7T','W5F8R7T','W5F9R7T']
 #======================perform main analysis for all runs first===================
 print('==========================LES analysis==========================')
 #loop through all LES cases
@@ -106,20 +106,29 @@ graphics.injection_model(penetrative_plumes, C, biasFit)
 #===========test iterative solution, do bias correction===============
 imp.reload(Plume)
 raw_error, unbiased_error, true_zCL = [], [], []
-# for plume in penetrative_plumes:
-for plume in all_plumes:
-    if plume.name in exclude_runs:
-        continue
-    else:
-        raw_plume = Plume.MODplume(plume.name)
-        raw_plume.I = plume.I
-        raw_plume.iterate(C)
-        unbiased_plume = Plume.MODplume(plume.name)
-        unbiased_plume.I = plume.I
-        unbiased_plume.iterate(C,biasFit)
-        true_zCL.append(plume.zCL)
-        raw_error.append(plume.zCL - raw_plume.zCL)
-        unbiased_error.append(plume.zCL - unbiased_plume.zCL)
+for plume in penetrative_plumes:
+    raw_plume = Plume.MODplume(plume.name)
+    raw_plume.I = plume.I
+    raw_plume.iterate(C)
+    unbiased_plume = Plume.MODplume(plume.name)
+    unbiased_plume.I = plume.I
+    unbiased_plume.iterate(C,biasFit)
+    true_zCL.append(plume.zCL)
+    raw_error.append(plume.zCL - raw_plume.zCL)
+    unbiased_error.append(plume.zCL - unbiased_plume.zCL)
+# for plume in all_plumes:
+#     if plume.name in exclude_runs:
+#         continue
+#     else:
+#         raw_plume = Plume.MODplume(plume.name)
+#         raw_plume.I = plume.I
+#         raw_plume.iterate(C)
+#         unbiased_plume = Plume.MODplume(plume.name)
+#         unbiased_plume.I = plume.I
+#         unbiased_plume.iterate(C,biasFit)
+#         true_zCL.append(plume.zCL)
+#         raw_error.append(plume.zCL - raw_plume.zCL)
+#         unbiased_error.append(plume.zCL - unbiased_plume.zCL)
 
 #plot bias correction statistics on iterative solution
 graphics.bias_correction(raw_error, unbiased_error, true_zCL, figname='IterativeSolution')
@@ -240,22 +249,3 @@ plt.colorbar().set_label('$z_{CL} - z_s$ [m]')
 plt.savefig(plume.figdir + 'injectionModel/FuelvsErrorHeight_TRIALS.pdf')
 plt.show()
 plt.close()
-
-#
-# #plot rearranged SOLUTION
-# LHS = (zCL - zS) * (g*Omega/thetaS)
-# RHS = (C**6) * ((Phi/(zi * Omega))**2)
-# plt.figure()
-# plt.title('REARRANGED FORM RS')
-# plt.scatter(RHS, LHS)
-# plt.gca().set(xlabel=r'$C^6\left(\frac{I}{z_i(\theta_{CL}-\theta_s)}\right)^2$',ylabel=r'$z\prime g\prime$')
-# plt.savefig(plume.figdir + 'injectionModel/RearrangedGroupsRS.pdf')
-# plt.show()
-#
-# #plot velocity comparison
-# plt.figure()
-# plt.title('COMPARE VELOCITIES')
-# plt.scatter(wStarC/(Tau*C),(Phi/(zi * Omega)) )
-# plt.gca().set(xlabel=r'$\widetilde{w_f}$',ylabel=r'$\frac{I}{z_i(\theta_{CL}-\theta_s)}$',aspect='equal',xlim = [0,20],ylim = [0,20])
-# plt.savefig(plume.figdir + 'injectionModel/CompareWs.pdf')
-# plt.show()

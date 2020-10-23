@@ -1,12 +1,11 @@
-#import numpy as np
-#import config
-#from numpy import ma
-#from scipy.optimize import fsolve
-#from scipy.signal import savgol_filter
-#from scipy.interpolate import interp1d
-#import utils
-#import graphics
-
+import config
+import utils
+import graphics
+import numpy as np
+from numpy import ma
+from scipy.optimize import fsolve
+from scipy.signal import savgol_filter
+from scipy.interpolate import interp1d
 
 
 class Plume:
@@ -77,7 +76,7 @@ class Plume:
     def get_I(self, flux2D, length, *Us):
         """
         Finds cross-wind fireline intensity parameter I
-        
+
         Parameters
         -----------
         flux2D : ndarray
@@ -140,7 +139,7 @@ class Plume:
     def classify(self):
         """
         Classifies the plume as penetrative (True) or boundary layer (False)
-        
+
         Returns
         --------
         penetrative : boolean

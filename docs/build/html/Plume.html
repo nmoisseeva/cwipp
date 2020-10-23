@@ -1,194 +1,336 @@
 
-<!DOCTYPE html>
 
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Plume Class &#8212; PR_model October 2020 documentation</title>
-    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Plume Class &mdash; PR_model October 2020 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
     
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
     
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Plume Rise Model documentation" href="index.html" /> 
-  </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="index.html" title="Plume Rise Model documentation"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">PR_model October 2020 documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Plume Class</a></li> 
-      </ul>
-    </div>  
+    <link rel="prev" title="CWIPP Optimization with LES Data" href="LES.html" /> 
+</head>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> PR_model
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">How To Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LES.html">CWIPP Optimization with LES Data</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Plume Class</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">PR_model</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Plume Class</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/Plume.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="plume-class">
 <h1>Plume Class<a class="headerlink" href="#plume-class" title="Permalink to this headline">¶</a></h1>
 <p>The following child class is contained in ‘’Plume.py’’</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">Plume</span>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">Plume</span>
 </pre></div>
 </div>
-<dl class="py class">
+<dl class="class">
 <dt id="Plume.LESplume">
-<em class="property">class </em><code class="sig-prename descclassname">Plume.</code><code class="sig-name descname">LESplume</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Plume.LESplume" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">Plume.</code><code class="descname">LESplume</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#Plume.LESplume" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Plume.Plume</span></code></p>
 <p>Child Plume class used for operating on simulated plumes with full fields available (i.e. non-predictive mode)</p>
-<dl class="py attribute">
+<dl class="attribute">
 <dt id="Plume.LESplume.profile">
-<code class="sig-name descname">profile</code><a class="headerlink" href="#Plume.LESplume.profile" title="Permalink to this definition">¶</a></dt>
+<code class="descname">profile</code><a class="headerlink" href="#Plume.LESplume.profile" title="Permalink to this definition">¶</a></dt>
 <dd><p>1D vector corresponding to quasi-stationary downwind PM profile [concentration]</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>ndarray</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">ndarray</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py attribute">
+<dl class="attribute">
 <dt id="Plume.LESplume.quartiles">
-<code class="sig-name descname">quartiles</code><a class="headerlink" href="#Plume.LESplume.quartiles" title="Permalink to this definition">¶</a></dt>
+<code class="descname">quartiles</code><a class="headerlink" href="#Plume.LESplume.quartiles" title="Permalink to this definition">¶</a></dt>
 <dd><p>2D array with columns corresponding to Q1 and Q3 profiles [concentration]</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>ndarray</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">ndarray</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py attribute">
+<dl class="attribute">
 <dt id="Plume.LESplume.zCL">
-<code class="sig-name descname">zCL</code><a class="headerlink" href="#Plume.LESplume.zCL" title="Permalink to this definition">¶</a></dt>
+<code class="descname">zCL</code><a class="headerlink" href="#Plume.LESplume.zCL" title="Permalink to this definition">¶</a></dt>
 <dd><p>plume injection height [m]</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py attribute">
+<dl class="attribute">
 <dt id="Plume.LESplume.centerline">
-<code class="sig-name descname">centerline</code><a class="headerlink" href="#Plume.LESplume.centerline" title="Permalink to this definition">¶</a></dt>
+<code class="descname">centerline</code><a class="headerlink" href="#Plume.LESplume.centerline" title="Permalink to this definition">¶</a></dt>
 <dd><p>masked array containing height indices of plume centerline</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>ndarray</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">ndarray</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py attribute">
+<dl class="attribute">
 <dt id="Plume.LESplume.ctr_idx">
-<code class="sig-name descname">ctr_idx</code><a class="headerlink" href="#Plume.LESplume.ctr_idx" title="Permalink to this definition">¶</a></dt>
+<code class="descname">ctr_idx</code><a class="headerlink" href="#Plume.LESplume.ctr_idx" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of vertical indecies correponding to centerline height</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>list</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py attribute">
+<dl class="attribute">
 <dt id="Plume.LESplume.THzCL">
-<code class="sig-name descname">THzCL</code><a class="headerlink" href="#Plume.LESplume.THzCL" title="Permalink to this definition">¶</a></dt>
+<code class="descname">THzCL</code><a class="headerlink" href="#Plume.LESplume.THzCL" title="Permalink to this definition">¶</a></dt>
 <dd><p>ambient potential temperature at zCL [K]</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py method">
+<dl class="method">
 <dt id="Plume.LESplume.classify">
-<code class="sig-name descname">classify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Plume.LESplume.classify" title="Permalink to this definition">¶</a></dt>
+<code class="descname">classify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Plume.LESplume.classify" title="Permalink to this definition">¶</a></dt>
 <dd><p>Classifies the plume as penetrative (True) or boundary layer (False)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>penetrative</strong> – classification (True if penetrative).</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>boolean</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>penetrative</strong> – classification (True if penetrative).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py method">
+<dl class="method">
 <dt id="Plume.LESplume.get_I">
-<code class="sig-name descname">get_I</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">flux2D</span></em>, <em class="sig-param"><span class="n">length</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">Us</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Plume.LESplume.get_I" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_I</code><span class="sig-paren">(</span><em>flux2D</em>, <em>length</em>, <em>*Us</em><span class="sig-paren">)</span><a class="headerlink" href="#Plume.LESplume.get_I" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finds cross-wind fireline intensity parameter I</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>flux2D</strong> (<em>ndarray</em>) – 3D (time,y,x) or 2D (y,x) array containing heat flux values [kW m-2].</p></li>
-<li><p><strong>length</strong> (<em>float</em>) – maximum cross-wind length of the fire over the entire timespan [m].</p></li>
-<li><p><strong>Us</strong> (<em>float</em><em>, </em><em>optional</em>) – surface wind direction [deg, relative to y axis] NOT CURRENTLY IMPLEMENTED!</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>flux2D</strong> (<em>ndarray</em>) – 3D (time,y,x) or 2D (y,x) array containing heat flux values [kW m-2].</li>
+<li><strong>length</strong> (<em>float</em>) – maximum cross-wind length of the fire over the entire timespan [m].</li>
+<li><strong>Us</strong> (<em>float</em><em>, </em><em>optional</em>) – surface wind direction [deg, relative to y axis] NOT CURRENTLY IMPLEMENTED!</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>I</strong> – fireline intensity parameter [K m2 s-1]</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>I</strong> – fireline intensity parameter [K m2 s-1]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py method">
+<dl class="method">
 <dt id="Plume.LESplume.get_wf">
-<code class="sig-name descname">get_wf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Plume.LESplume.get_wf" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_wf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Plume.LESplume.get_wf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Applies plume rise parameterization to find characteristic time ($Tau$) and velocity ($w_f$) scales</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><ul class="simple">
-<li><p><strong>wf</strong> (<em>float</em>) – characteristic fire velocity scale [m s-1]</p></li>
-<li><p><strong>Tau</strong> (<em>float</em>) – characteristic timescale [s]</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><strong>wf</strong> (<em>float</em>) – characteristic fire velocity scale [m s-1]</li>
+<li><strong>Tau</strong> (<em>float</em>) – characteristic timescale [s]</li>
 </ul>
-</p>
-</dd>
-</dl>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py method">
+<dl class="method">
 <dt id="Plume.LESplume.get_zCL">
-<code class="sig-name descname">get_zCL</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pm</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Plume.LESplume.get_zCL" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_zCL</code><span class="sig-paren">(</span><em>pm</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#Plume.LESplume.get_zCL" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finds quasi-stationary downwind profile and its IQR, extracts injection height and associated variables</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pm</strong> (<em>ndarray</em>) – 2D array (z,x) of pm cross-section</p></li>
-<li><p><strong>plot</strong> (<em>boolean</em><em>, </em><em>optional</em>) – create a multi-panel plot of the method, requires csdict argument to follow</p></li>
-<li><p><strong>csdict</strong> (<em>dict</em><em>, </em><em>optional</em>) – cross-section dictionary for the plume, if plotting is required</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pm</strong> (<em>ndarray</em>) – 2D array (z,x) of pm cross-section</li>
+<li><strong>plot</strong> (<em>boolean</em><em>, </em><em>optional</em>) – create a multi-panel plot of the method, requires csdict argument to follow</li>
+<li><strong>csdict</strong> (<em>dict</em><em>, </em><em>optional</em>) – cross-section dictionary for the plume, if plotting is required</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>profile</strong> (<em>ndarray</em>) – 1D vector corresponding to quasi-stationary downwind PM profile</p></li>
-<li><p><strong>quartiles</strong> (<em>ndarray</em>) – 2D array with columns corresponding to Q1 and Q3 profiles</p></li>
-<li><p><strong>zCL</strong> (<em>float</em>) – plume injection height [m]</p></li>
-<li><p><strong>centerline</strong> (<em>ndarray</em>) – masked array containing height indices of plume centerline</p></li>
-<li><p><strong>ctr_idx</strong> (<em>list</em>) – list of vertical indecies correponding to centerline height</p></li>
-<li><p><strong>THzCL</strong> (<em>float</em>) – ambient potential temperature at zCL [K]</p></li>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>profile</strong> (<em>ndarray</em>) – 1D vector corresponding to quasi-stationary downwind PM profile</li>
+<li><strong>quartiles</strong> (<em>ndarray</em>) – 2D array with columns corresponding to Q1 and Q3 profiles</li>
+<li><strong>zCL</strong> (<em>float</em>) – plume injection height [m]</li>
+<li><strong>centerline</strong> (<em>ndarray</em>) – masked array containing height indices of plume centerline</li>
+<li><strong>ctr_idx</strong> (<em>list</em>) – list of vertical indecies correponding to centerline height</li>
+<li><strong>THzCL</strong> (<em>float</em>) – ambient potential temperature at zCL [K]</li>
 </ul>
 </p>
-</dd>
-</dl>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -196,52 +338,50 @@
 </div>
 
 
-            <div class="clearer"></div>
+           </div>
+           
           </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="LES.html" class="btn btn-neutral float-left" title="CWIPP Optimization with LES Data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Nadya Moisseeva
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="index.html"
-                        title="previous chapter">Plume Rise Model documentation</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/Plume.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="index.html" title="Plume Rise Model documentation"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">PR_model October 2020 documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Plume Class</a></li> 
-      </ul>
-    </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2020, Nadya Moisseeva.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
-    </div>
-  </body>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
 </html>
