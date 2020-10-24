@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>cwipp.Plume.classify &mdash; PR_model October 2020 documentation</title>
+  <title>cwipp.MODplume.iterate &mdash; PR_model October 2020 documentation</title>
   
 
   
@@ -36,8 +36,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="cwipp.LESplume.get_zCL" href="cwipp.LESplume.get_zCL.html" />
-    <link rel="prev" title="cwipp.Plume.get_wf" href="cwipp.Plume.get_wf.html" /> 
+    <link rel="next" title="cwipp.MODplume.explicit_solution" href="cwipp.MODplume.explicit_solution.html" />
+    <link rel="prev" title="cwipp.LESplume.get_zCL" href="cwipp.LESplume.get_zCL.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -88,14 +88,13 @@
 <li class="toctree-l1"><a class="reference internal" href="usage.html">How To Use</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="reference.html">Reference Guide</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="reference.html#plume-classes">Plume Classes</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="reference.html#plume-base-class-methods">Plume Base Class Methods</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="cwipp.Plume.get_I.html">cwipp.Plume.get_I</a></li>
-<li class="toctree-l3"><a class="reference internal" href="cwipp.Plume.get_wf.html">cwipp.Plume.get_wf</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">cwipp.Plume.classify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#plume-base-class-methods">Plume Base Class Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#lesplume-class-methods">LESplume Class Methods</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="reference.html#modplume-class-methods">MODplume Class Methods</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">cwipp.MODplume.iterate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cwipp.MODplume.explicit_solution.html">cwipp.MODplume.explicit_solution</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="reference.html#lesplume-class-methods">LESplume Class Methods</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference.html#modplume-class-methods">MODplume Class Methods</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="LES.html">CWIPP Optimization with LES Data</a></li>
@@ -147,13 +146,13 @@
         
           <li><a href="reference.html">Reference Guide</a> &raquo;</li>
         
-      <li>cwipp.Plume.classify</li>
+      <li>cwipp.MODplume.iterate</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/cwipp.Plume.classify.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/cwipp.MODplume.iterate.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -166,18 +165,26 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="cwipp-plume-classify">
-<h1>cwipp.Plume.classify<a class="headerlink" href="#cwipp-plume-classify" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="cwipp-modplume-iterate">
+<h1>cwipp.MODplume.iterate<a class="headerlink" href="#cwipp-modplume-iterate" title="Permalink to this headline">¶</a></h1>
 <dl class="py method">
-<dt id="cwipp.Plume.classify">
-<code class="sig-prename descclassname">Plume.</code><code class="sig-name descname">classify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cwipp.Plume.classify" title="Permalink to this definition">¶</a></dt>
-<dd><p>Classifies the plume as penetrative (True) or boundary layer (False)</p>
+<dt id="cwipp.MODplume.iterate">
+<code class="sig-prename descclassname">MODplume.</code><code class="sig-name descname">iterate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">biasFit</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cwipp.MODplume.iterate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies iterative solution to parameterize plume injection height</p>
+<p>…</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>penetrative</strong> – classification (True if penetrative).</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>biasFit</strong> (<em>array_like</em><em>, </em><em>optional</em>) – bias fit parameters. Default is m = 1, b = 0</p></li>
+<li><p><strong>argout</strong> (<em>boolean</em><em>, </em><em>optional</em>) – flag to output return arguments. If False(default) they are assigned as attributes</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>boolean</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>zCL</strong> (<em>float</em>) – parameterized plume injection height [m]</p></li>
+<li><p><strong>THzCL</strong> (<em>float</em>) – ambient potential temperature at modelled zCL [K]</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -192,10 +199,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="cwipp.LESplume.get_zCL.html" class="btn btn-neutral float-right" title="cwipp.LESplume.get_zCL" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="cwipp.MODplume.explicit_solution.html" class="btn btn-neutral float-right" title="cwipp.MODplume.explicit_solution" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="cwipp.Plume.get_wf.html" class="btn btn-neutral float-left" title="cwipp.Plume.get_wf" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="cwipp.LESplume.get_zCL.html" class="btn btn-neutral float-left" title="cwipp.LESplume.get_zCL" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

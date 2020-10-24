@@ -4,7 +4,7 @@
 CWIPP Optimization with LES Data
 *************************************
 
-The main routine contained in ``runLESanalysis.py`` performs key model optimization and bias correction using Large Eddy Simulation (LES) data from WRF-SFIRE.
+The main routine contained in ``runLESanalysis.py`` performs model optimization and bias correction using Large Eddy Simulation (LES) data from WRF-SFIRE. This routine is not required for running the plume rise model in a predictive mode. Default bias parameters stored in ``config.py`` will be sourced for all general cases. 
 
 Key configuration setting for this analysis are contained in ``config.py``. Their descriptions can be found in :ref:`config-table`.
 

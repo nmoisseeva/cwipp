@@ -2,10 +2,10 @@
 Reference Guide
 ****************
 
-Plume Base Class
+Plume Classes
 -----------------
 
-Parent class for all types of plumes
+
 
 .. currentmodule:: cwipp
 
@@ -15,18 +15,41 @@ Parent class for all types of plumes
    :toctree:
 
    cwipp.Plume
+   cwipp.LESplume
+   cwipp.MODplume
+
 
 Plume Base Class Methods
 ------------------------
 
-See :class:`Plume.Plume` for methods and attributes.
-
-.. currentmodule:: cwipp
-
 .. autosummary::
    :recursive:
+   :nosignatures:
    :toctree:
 
    Plume.get_I
    Plume.get_wf
    Plume.classify
+
+
+LESplume Class Methods
+------------------------
+
+.. autosummary::
+   :recursive:
+   :nosignatures:
+   :toctree:
+
+   LESplume.get_zCL
+
+
+MODplume Class Methods
+------------------------
+
+.. autosummary::
+  :recursive:
+  :nosignatures:
+  :toctree:
+
+  MODplume.iterate
+  MODplume.explicit_solution

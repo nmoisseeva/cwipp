@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>cwipp.Plume &mdash; PR_model October 2020 documentation</title>
+  <title>cwipp.MODplume &mdash; PR_model October 2020 documentation</title>
   
 
   
@@ -36,8 +36,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="cwipp.LESplume" href="cwipp.LESplume.html" />
-    <link rel="prev" title="Reference Guide" href="reference.html" /> 
+    <link rel="next" title="cwipp.Plume.get_I" href="cwipp.Plume.get_I.html" />
+    <link rel="prev" title="cwipp.LESplume" href="cwipp.LESplume.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -88,9 +88,9 @@
 <li class="toctree-l1"><a class="reference internal" href="usage.html">How To Use</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="reference.html">Reference Guide</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="reference.html#plume-classes">Plume Classes</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">cwipp.Plume</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cwipp.Plume.html">cwipp.Plume</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cwipp.LESplume.html">cwipp.LESplume</a></li>
-<li class="toctree-l3"><a class="reference internal" href="cwipp.MODplume.html">cwipp.MODplume</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">cwipp.MODplume</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="reference.html#plume-base-class-methods">Plume Base Class Methods</a></li>
@@ -147,13 +147,13 @@
         
           <li><a href="reference.html">Reference Guide</a> &raquo;</li>
         
-      <li>cwipp.Plume</li>
+      <li>cwipp.MODplume</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/cwipp.Plume.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/cwipp.MODplume.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -166,27 +166,17 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="cwipp-plume">
-<h1>cwipp.Plume<a class="headerlink" href="#cwipp-plume" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="cwipp-modplume">
+<h1>cwipp.MODplume<a class="headerlink" href="#cwipp-modplume" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt id="cwipp.Plume">
-<em class="property">class </em><code class="sig-prename descclassname">cwipp.</code><code class="sig-name descname">Plume</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cwipp.Plume" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parent Plume class.</p>
+<dt id="cwipp.MODplume">
+<em class="property">class </em><code class="sig-prename descclassname">cwipp.</code><code class="sig-name descname">MODplume</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cwipp.MODplume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Child Plume class used for modelled plumes (predictive mode)</p>
+<p>…</p>
 <dl class="py attribute">
-<dt id="cwipp.Plume.name">
-<code class="sig-name descname">name</code><a class="headerlink" href="#cwipp.Plume.name" title="Permalink to this definition">¶</a></dt>
-<dd><p>plume name</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="cwipp.Plume.zi">
-<code class="sig-name descname">zi</code><a class="headerlink" href="#cwipp.Plume.zi" title="Permalink to this definition">¶</a></dt>
-<dd><p>boundary layer height [m]</p>
+<dt id="cwipp.MODplume.zCL">
+<code class="sig-name descname">zCL</code><a class="headerlink" href="#cwipp.MODplume.zCL" title="Permalink to this definition">¶</a></dt>
+<dd><p>parameterized plume injection height [m]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>float</p>
@@ -195,64 +185,9 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="cwipp.Plume.zs">
-<code class="sig-name descname">zs</code><a class="headerlink" href="#cwipp.Plume.zs" title="Permalink to this definition">¶</a></dt>
-<dd><p>refernce height (zi * BLfrac) [m]</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="cwipp.Plume.sounding">
-<code class="sig-name descname">sounding</code><a class="headerlink" href="#cwipp.Plume.sounding" title="Permalink to this definition">¶</a></dt>
-<dd><p>vertical potential temperature sounding on interpolated analysis levels [K]</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="cwipp.Plume.THs">
-<code class="sig-name descname">THs</code><a class="headerlink" href="#cwipp.Plume.THs" title="Permalink to this definition">¶</a></dt>
-<dd><p>ambient potential tempreature at reference height zs [K]</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="cwipp.Plume.I">
-<code class="sig-name descname">I</code><a class="headerlink" href="#cwipp.Plume.I" title="Permalink to this definition">¶</a></dt>
-<dd><p>fireline intensity parameter [K m2 s-1]</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="cwipp.Plume.wf">
-<code class="sig-name descname">wf</code><a class="headerlink" href="#cwipp.Plume.wf" title="Permalink to this definition">¶</a></dt>
-<dd><p>characteristic fire velocity scale [m s-1]</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="cwipp.Plume.Tau">
-<code class="sig-name descname">Tau</code><a class="headerlink" href="#cwipp.Plume.Tau" title="Permalink to this definition">¶</a></dt>
-<dd><p>characteristic timescale [s]</p>
+<dt id="cwipp.MODplume.THzCL">
+<code class="sig-name descname">THzCL</code><a class="headerlink" href="#cwipp.MODplume.THzCL" title="Permalink to this definition">¶</a></dt>
+<dd><p>ambient potential temperature at modelled zCL [K]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>float</p>
@@ -261,8 +196,14 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="cwipp.Plume.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cwipp.Plume.__init__" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="sig-name descname">iterate(self):</code></dt>
+<dd><p>Applies iterative solution to parameterize plume injection height</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cwipp.MODplume.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cwipp.MODplume.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs the plume object with some inital attributes
 …</p>
 <dl class="field-list simple">
@@ -279,17 +220,23 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cwipp.Plume.__init__" title="cwipp.Plume.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(name)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cwipp.MODplume.__init__" title="cwipp.MODplume.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(name)</p></td>
 <td><p>Constructs the plume object with some inital attributes</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="cwipp.Plume.classify.html#cwipp.Plume.classify" title="cwipp.Plume.classify"><code class="xref py py-obj docutils literal notranslate"><span class="pre">classify</span></code></a>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">classify</span></code>()</p></td>
 <td><p>Classifies the plume as penetrative (True) or boundary layer (False)</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="cwipp.Plume.get_I.html#cwipp.Plume.get_I" title="cwipp.Plume.get_I"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_I</span></code></a>(flux2D, length, *Us)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="cwipp.MODplume.explicit_solution.html#cwipp.MODplume.explicit_solution" title="cwipp.MODplume.explicit_solution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">explicit_solution</span></code></a>(Gamma, ze[, biasFit])</p></td>
+<td><p>Applies explicit solution to parameterize plume injection height</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_I</span></code>(flux2D, length, *Us)</p></td>
 <td><p>Finds cross-wind fireline intensity parameter I</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="cwipp.Plume.get_wf.html#cwipp.Plume.get_wf" title="cwipp.Plume.get_wf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_wf</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_wf</span></code>()</p></td>
 <td><p>Finds characteristic time (Tau) and velocity (wf) scales.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="cwipp.MODplume.iterate.html#cwipp.MODplume.iterate" title="cwipp.MODplume.iterate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">iterate</span></code></a>([biasFit])</p></td>
+<td><p>Applies iterative solution to parameterize plume injection height</p></td>
 </tr>
 </tbody>
 </table>
@@ -305,10 +252,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="cwipp.LESplume.html" class="btn btn-neutral float-right" title="cwipp.LESplume" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="cwipp.Plume.get_I.html" class="btn btn-neutral float-right" title="cwipp.Plume.get_I" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="reference.html" class="btn btn-neutral float-left" title="Reference Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="cwipp.LESplume.html" class="btn btn-neutral float-left" title="cwipp.LESplume" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

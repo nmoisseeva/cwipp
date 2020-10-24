@@ -4,14 +4,14 @@ How To Use
 Introduction
 ---------------
 
-The contents of this package include two variable computation/extraction
+The contents of this package include two process-based routines
 routines, several methods implementing CWIPP algorithms and a collection of plotting functions.
 
 The key routines are summarized below:
 
-- ``runCWIPP.py`` - Runs the plume rise model for a general case (in predictive mode). General steps are  summarized in :ref:`basic-usage` below.
+- ``runCWIPP.py`` - Runs the plume rise model for a general case (in predictive mode). Steps are  summarized in :ref:`basic-usage` below.
 
-- ``runLESanalysis.py`` - Performs optimization of CWIPP model using synthetic WRF-SFIRE LES plume data. Details can be found :ref:`here <LES>`.
+- ``runLESanalysis.py`` - Performs optimization of CWIPP model using synthetic WRF-SFIRE LES plume data. Details can be found :ref:`here <LES>` (this routine is optional).
 
 
 
@@ -36,5 +36,3 @@ Basic Usage
 ..     slp = getvar(ncfile, "slp")
 ..
 ..     print(slp)
-
-Result:

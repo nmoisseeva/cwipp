@@ -87,14 +87,25 @@
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">How To Use</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Reference Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#plume-base-class">Plume Base Class</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#plume-classes">Plume Classes</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="cwipp.Plume.html">cwipp.Plume</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cwipp.LESplume.html">cwipp.LESplume</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cwipp.MODplume.html">cwipp.MODplume</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#plume-base-class-methods">Plume Base Class Methods</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="cwipp.Plume.get_I.html">cwipp.Plume.get_I</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cwipp.Plume.get_wf.html">cwipp.Plume.get_wf</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cwipp.Plume.classify.html">cwipp.Plume.classify</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lesplume-class-methods">LESplume Class Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cwipp.LESplume.get_zCL.html">cwipp.LESplume.get_zCL</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#modplume-class-methods">MODplume Class Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cwipp.MODplume.iterate.html">cwipp.MODplume.iterate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cwipp.MODplume.explicit_solution.html">cwipp.MODplume.explicit_solution</a></li>
 </ul>
 </li>
 </ul>
@@ -167,9 +178,8 @@
             
   <div class="section" id="reference-guide">
 <h1>Reference Guide<a class="headerlink" href="#reference-guide" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="plume-base-class">
-<h2>Plume Base Class<a class="headerlink" href="#plume-base-class" title="Permalink to this headline">¶</a></h2>
-<p>Parent class for all types of plumes</p>
+<div class="section" id="plume-classes">
+<h2>Plume Classes<a class="headerlink" href="#plume-classes" title="Permalink to this headline">¶</a></h2>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -179,26 +189,62 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="cwipp.Plume.html#cwipp.Plume" title="cwipp.Plume"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cwipp.Plume</span></code></a></p></td>
 <td><p>Parent Plume class.</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="cwipp.LESplume.html#cwipp.LESplume" title="cwipp.LESplume"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cwipp.LESplume</span></code></a></p></td>
+<td><p>Child Plume class used for simulated plumes (non-predictive mode).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="cwipp.MODplume.html#cwipp.MODplume" title="cwipp.MODplume"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cwipp.MODplume</span></code></a></p></td>
+<td><p>Child Plume class used for modelled plumes (predictive mode)</p></td>
+</tr>
 </tbody>
 </table>
 </div>
 <div class="section" id="plume-base-class-methods">
 <h2>Plume Base Class Methods<a class="headerlink" href="#plume-base-class-methods" title="Permalink to this headline">¶</a></h2>
-<p>See <code class="xref py py-class docutils literal notranslate"><span class="pre">Plume.Plume</span></code> for methods and attributes.</p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="cwipp.Plume.get_I.html#cwipp.Plume.get_I" title="cwipp.Plume.get_I"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Plume.get_I</span></code></a>(flux2D, length, *Us)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="cwipp.Plume.get_I.html#cwipp.Plume.get_I" title="cwipp.Plume.get_I"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Plume.get_I</span></code></a></p></td>
 <td><p>Finds cross-wind fireline intensity parameter I</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="cwipp.Plume.get_wf.html#cwipp.Plume.get_wf" title="cwipp.Plume.get_wf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Plume.get_wf</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="cwipp.Plume.get_wf.html#cwipp.Plume.get_wf" title="cwipp.Plume.get_wf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Plume.get_wf</span></code></a></p></td>
 <td><p>Finds characteristic time (Tau) and velocity (wf) scales.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="cwipp.Plume.classify.html#cwipp.Plume.classify" title="cwipp.Plume.classify"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Plume.classify</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="cwipp.Plume.classify.html#cwipp.Plume.classify" title="cwipp.Plume.classify"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Plume.classify</span></code></a></p></td>
 <td><p>Classifies the plume as penetrative (True) or boundary layer (False)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="lesplume-class-methods">
+<h2>LESplume Class Methods<a class="headerlink" href="#lesplume-class-methods" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="cwipp.LESplume.get_zCL.html#cwipp.LESplume.get_zCL" title="cwipp.LESplume.get_zCL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LESplume.get_zCL</span></code></a></p></td>
+<td><p>Extracts mean injection height from LES.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="modplume-class-methods">
+<h2>MODplume Class Methods<a class="headerlink" href="#modplume-class-methods" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="cwipp.MODplume.iterate.html#cwipp.MODplume.iterate" title="cwipp.MODplume.iterate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MODplume.iterate</span></code></a></p></td>
+<td><p>Applies iterative solution to parameterize plume injection height</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="cwipp.MODplume.explicit_solution.html#cwipp.MODplume.explicit_solution" title="cwipp.MODplume.explicit_solution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MODplume.explicit_solution</span></code></a></p></td>
+<td><p>Applies explicit solution to parameterize plume injection height</p></td>
 </tr>
 </tbody>
 </table>
