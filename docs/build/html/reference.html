@@ -30,6 +30,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -168,6 +169,9 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Plume.Plume</span></code></p></td>
+<td><p>Parent Plume class.</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -180,6 +184,15 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Plume.get_I</span></code>(flux2D, length, *Us)</p></td>
+<td><p>Finds cross-wind fireline intensity parameter I</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Plume.get_wf</span></code>()</p></td>
+<td><p>Applies plume rise parameterization to find characteristic time ( <span class="math notranslate nohighlight">\(\Tau\)</span>) and velocity ( <span class="math notranslate nohighlight">\(w_f\)</span>) scales</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Plume.classify</span></code>()</p></td>
+<td><p>Classifies the plume as penetrative (True) or boundary layer (False)</p></td>
+</tr>
 </tbody>
 </table>
 </div>

@@ -7,13 +7,14 @@ Plume Base Class
 
 Parent class for all types of plumes
 
+.. currentmodule:: Plume
 
 .. autosummary::
    :nosignatures:
    :recursive:
-   :toctree: generated
+   :toctree:
 
-   Plume
+   Plume.Plume
 
 Plume Base Class Methods
 ------------------------
@@ -21,9 +22,8 @@ Plume Base Class Methods
 See :class:`Plume.Plume` for methods and attributes.
 
 .. autosummary::
-   :nosignatures:
    :recursive:
-   :toctree: generated
+   :toctree:
 
    Plume.get_I
    Plume.get_wf
