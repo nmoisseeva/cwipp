@@ -7,19 +7,21 @@ Plume Base Class
 
 Parent class for all types of plumes
 
-.. currentmodule:: Plume
+.. currentmodule:: cwipp
 
 .. autosummary::
    :nosignatures:
    :recursive:
    :toctree:
 
-   Plume.Plume
+   cwipp.Plume
 
 Plume Base Class Methods
 ------------------------
 
 See :class:`Plume.Plume` for methods and attributes.
+
+.. currentmodule:: cwipp
 
 .. autosummary::
    :recursive:

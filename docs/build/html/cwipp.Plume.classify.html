@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>How To Use &mdash; PR_model October 2020 documentation</title>
+  <title>cwipp.Plume.classify &mdash; PR_model October 2020 documentation</title>
   
 
   
@@ -36,8 +36,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Reference Guide" href="reference.html" />
-    <link rel="prev" title="Installation" href="install.html" /> 
+    <link rel="next" title="CWIPP Optimization with LES Data" href="LES.html" />
+    <link rel="prev" title="cwipp.Plume.get_wf" href="cwipp.Plume.get_wf.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -85,12 +85,17 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">How To Use</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#basic-usage">Basic Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">How To Use</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="reference.html">Reference Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="reference.html#plume-base-class">Plume Base Class</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="reference.html#plume-base-class-methods">Plume Base Class Methods</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cwipp.Plume.get_I.html">cwipp.Plume.get_I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cwipp.Plume.get_wf.html">cwipp.Plume.get_wf</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">cwipp.Plume.classify</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference Guide</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="LES.html">CWIPP Optimization with LES Data</a></li>
 </ul>
 
@@ -138,13 +143,15 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>How To Use</li>
+          <li><a href="reference.html">Reference Guide</a> &raquo;</li>
+        
+      <li>cwipp.Plume.classify</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/usage.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/cwipp.Plume.classify.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -157,23 +164,22 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="how-to-use">
-<h1>How To Use<a class="headerlink" href="#how-to-use" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
-<p>The contents of this package include two variable computation/extraction
-routines, several methods implementing CWIPP algorithms and a collection of plotting functions.</p>
-<p>The key routines are summarized below:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">runCWIPP.py</span></code> - Runs the plume rise model for a general case (in predictive mode). General steps are  summarized in <a class="reference internal" href="#basic-usage"><span class="std std-ref">Basic Usage</span></a> below.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">runLESanalysis.py</span></code> - Performs optimization of CWIPP model using synthetic WRF-SFIRE LES plume data. Details can be found <a class="reference internal" href="LES.html#les"><span class="std std-ref">here</span></a>.</p></li>
-</ul>
-</div>
-<div class="section" id="basic-usage">
-<span id="id1"></span><h2>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">runCWIPP.py</span></code> contains sample code for applying the CWIPP model in a forecast setting to predict the vertical smoke profile of a real-world wildfire plume</p>
-<p>Result:</p>
-</div>
+  <div class="section" id="cwipp-plume-classify">
+<h1>cwipp.Plume.classify<a class="headerlink" href="#cwipp-plume-classify" title="Permalink to this headline">¶</a></h1>
+<dl class="py method">
+<dt id="cwipp.Plume.classify">
+<code class="sig-prename descclassname">Plume.</code><code class="sig-name descname">classify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cwipp.Plume.classify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Classifies the plume as penetrative (True) or boundary layer (False)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>penetrative</strong> – classification (True if penetrative).</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 
 
@@ -184,10 +190,10 @@ routines, several methods implementing CWIPP algorithms and a collection of plot
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="reference.html" class="btn btn-neutral float-right" title="Reference Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="LES.html" class="btn btn-neutral float-right" title="CWIPP Optimization with LES Data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="install.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="cwipp.Plume.get_wf.html" class="btn btn-neutral float-left" title="cwipp.Plume.get_wf" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

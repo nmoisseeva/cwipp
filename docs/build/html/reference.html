@@ -30,14 +30,13 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="CWIPP Optimization with LES Data" href="LES.html" />
+    <link rel="next" title="cwipp.Plume" href="cwipp.Plume.html" />
     <link rel="prev" title="How To Use" href="usage.html" /> 
 </head>
 
@@ -88,8 +87,16 @@
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">How To Use</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Reference Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#plume-base-class">Plume Base Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#plume-base-class-methods">Plume Base Class Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plume-base-class">Plume Base Class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cwipp.Plume.html">cwipp.Plume</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#plume-base-class-methods">Plume Base Class Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cwipp.Plume.get_I.html">cwipp.Plume.get_I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cwipp.Plume.get_wf.html">cwipp.Plume.get_wf</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cwipp.Plume.classify.html">cwipp.Plume.classify</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="LES.html">CWIPP Optimization with LES Data</a></li>
@@ -169,7 +176,7 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Plume.Plume</span></code></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="cwipp.Plume.html#cwipp.Plume" title="cwipp.Plume"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cwipp.Plume</span></code></a></p></td>
 <td><p>Parent Plume class.</p></td>
 </tr>
 </tbody>
@@ -184,13 +191,13 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Plume.get_I</span></code>(flux2D, length, *Us)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="cwipp.Plume.get_I.html#cwipp.Plume.get_I" title="cwipp.Plume.get_I"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Plume.get_I</span></code></a>(flux2D, length, *Us)</p></td>
 <td><p>Finds cross-wind fireline intensity parameter I</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Plume.get_wf</span></code>()</p></td>
-<td><p>Applies plume rise parameterization to find characteristic time ( <span class="math notranslate nohighlight">\(\Tau\)</span>) and velocity ( <span class="math notranslate nohighlight">\(w_f\)</span>) scales</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="cwipp.Plume.get_wf.html#cwipp.Plume.get_wf" title="cwipp.Plume.get_wf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Plume.get_wf</span></code></a>()</p></td>
+<td><p>Finds characteristic time (Tau) and velocity (wf) scales.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Plume.classify</span></code>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="cwipp.Plume.classify.html#cwipp.Plume.classify" title="cwipp.Plume.classify"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Plume.classify</span></code></a>()</p></td>
 <td><p>Classifies the plume as penetrative (True) or boundary layer (False)</p></td>
 </tr>
 </tbody>
@@ -206,7 +213,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="LES.html" class="btn btn-neutral float-right" title="CWIPP Optimization with LES Data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="cwipp.Plume.html" class="btn btn-neutral float-right" title="cwipp.Plume" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="usage.html" class="btn btn-neutral float-left" title="How To Use" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
