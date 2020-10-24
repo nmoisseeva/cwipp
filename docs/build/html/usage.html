@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,30 +11,32 @@
   
 
   
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="CWIPP Optimization with LES Data" href="LES.html" />
+    <link rel="next" title="Reference Guide" href="reference.html" />
     <link rel="prev" title="Installation" href="install.html" /> 
 </head>
 
@@ -50,7 +51,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> PR_model
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> PR_model
           
 
           
@@ -73,6 +74,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -88,13 +90,14 @@
 <li class="toctree-l2"><a class="reference internal" href="#basic-usage">Basic Usage</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="LES.html">CWIPP Optimization with LES Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Plume.html">Plume Class</a></li>
 </ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -133,7 +136,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>How To Use</li>
     
@@ -159,15 +162,16 @@
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>The contents of this package include two variable computation/extraction
-routines, several methods implementing CWIPP algorithms and a few plotting functions.</p>
+routines, several methods implementing CWIPP algorithms and a collection of plotting functions.</p>
 <p>The key routines are summarized below:</p>
 <ul class="simple">
-<li><code class="xref py py-meth docutils literal notranslate"><span class="pre">Plume.get_wf()</span></code> - Computes the characteristic vertical fire velocity scale</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">runCWIPP.py</span></code> - Runs the plume rise model for a general case (in predictive mode). General steps are  summarized in <a class="reference internal" href="#basic-usage"><span class="std std-ref">Basic Usage</span></a> below.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">runLESanalysis.py</span></code> - Performs optimization of CWIPP model using synthetic WRF-SFIRE LES plume data. Details can be found <a class="reference internal" href="LES.html#les"><span class="std std-ref">here</span></a>.</p></li>
 </ul>
 </div>
 <div class="section" id="basic-usage">
-<h2>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
-<p id="id1"><code class="docutils literal notranslate"><span class="pre">runCWIPP.py</span></code> contains sample code for applying the CWIPP model in a forecast setting to predict the vertical smoke profile of a real-world wildfire plume</p>
+<span id="id1"></span><h2>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">runCWIPP.py</span></code> contains sample code for applying the CWIPP model in a forecast setting to predict the vertical smoke profile of a real-world wildfire plume</p>
 <p>Result:</p>
 </div>
 </div>
@@ -180,7 +184,7 @@ routines, several methods implementing CWIPP algorithms and a few plotting funct
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="LES.html" class="btn btn-neutral float-right" title="CWIPP Optimization with LES Data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="reference.html" class="btn btn-neutral float-right" title="Reference Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="install.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -192,11 +196,19 @@ routines, several methods implementing CWIPP algorithms and a few plotting funct
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2020, Nadya Moisseeva
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -207,7 +219,6 @@ routines, several methods implementing CWIPP algorithms and a few plotting funct
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

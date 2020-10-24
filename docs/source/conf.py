@@ -12,7 +12,6 @@
 #
 import os
 import sys
-#sys.path.insert(0, os.path.relpath('..'))
 sys.path.insert(0, os.path.abspath('../..'))
 
 # -- Project information -----------------------------------------------------
@@ -33,7 +32,7 @@ master_doc = 'index'
 # ones.
 #extensions = ['sphinx.ext.autodoc', 'sphinx.ext.coverage', 'sphinx.ext.napoleon']
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.coverage', 'sphinx.ext.autosectionlabel', \
-    'sphinx.ext.napoleon','sphinx.ext.mathjax']
+    'sphinx.ext.napoleon','sphinx.ext.mathjax','sphinx.ext.autosummary']
 
 # use language set by highlight directive if no language is set by role
 inline_highlight_respect_highlight = False

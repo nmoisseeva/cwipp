@@ -1,3 +1,5 @@
+.. _LES:
+
 *************************************
 CWIPP Optimization with LES Data
 *************************************
@@ -9,12 +11,12 @@ Key configuration setting for this analysis are contained in ``config.py``. Thei
 
 .. note::
 
-   Running this part of the code requires access to interpolated cross-sectional data from WRF-SFIRE generated synthetic plumes. 
+   Running this part of the code requires access to interpolated cross-sectional data from WRF-SFIRE generated synthetic plumes.
+
 
 Table of Configuration Settings
 -------------------------------
 .. _config-table:
-
 
 
 .. list-table:: Configuration Settings
@@ -24,6 +26,9 @@ Table of Configuration Settings
    * - Parameter
      - Type
      - Description
-   * - test
-     - test
-     - test
+   * - **wrfdir**
+     - str
+     - Path to interpolated cross-sectional plume data
+   * - **figdir**
+     - str
+     - Set path for storing figures

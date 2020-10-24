@@ -27,9 +27,8 @@ https://firesmoke.ca/
 
    ./install
    ./usage
+   ./reference
    ./LES
-   ./Plume
-
 
 
 Indices and tables

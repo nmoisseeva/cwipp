@@ -269,3 +269,53 @@ def bias_correction(raw_error, unbiased_error, true_zCL, figname='BiasCorrection
     plt.tight_layout(rect=[0, 0, 1, 0.95])
     plt.savefig(figpath + figname + '.pdf')
     plt.close()
+
+def model_sensitivity(ModelError,flatModelError,Rstore):
+
+    #create a storage directory for plots
+    figpath = config.figdir + 'injection/'
+    if not os.path.exists(figpath):
+        os.makedirs(figpath)
+
+    #plot model sensitivity
+    plt.figure(figsize=(6,6))
+    gs = gridspec.GridSpec(2, 2)
+    ax0 = plt.subplot(gs[0,0:])
+    plt.title('(a) TRIAL ERROR')
+    plt.boxplot(np.array(ModelError))
+    plt.hlines(0,0,11,colors='grey',linestyles='dashed')
+    ax0.set(xlabel='trial no.', ylabel='error in zCL [m]',ylim=[-200,200])
+
+    ax1 = plt.subplot(gs[1,0])
+    plt.title('(b) ALL TRIALS')
+    plt.boxplot(flatModelError)
+    plt.hlines(0,0.5,1.5,colors='grey',linestyles='dashed')
+    ax1.set(xlabel='all runs', ylabel='error in zCL [m]',ylim=[-200,200])
+
+    ax2 = plt.subplot(gs[1,1])
+    ax2.set(xlabel='R-value',ylabel='count' )
+    plt.title('(c) R-VALUE SENSITIVITY')
+    plt.hist(Rstore, bins=3)
+    ax2.set(xlabel='R-value',ylabel='count' )
+    plt.tight_layout()
+    plt.savefig(figpath + 'ModelSensitivity.pdf')
+    plt.close()
+
+def fuel_error(flatTrialFuel,flatModelError,flatTrialZcl):
+
+    #create a storage directory for plots
+    figpath = config.figdir + 'injection/'
+    if not os.path.exists(figpath):
+        os.makedirs(figpath)
+
+    plt.figure()
+    plt.title('ERROR AS A FUNCTION OF FUEL (TRIALS)')
+    plt.scatter(flatTrialFuel,flatModelError, c=flatTrialZcl)
+    plt.hlines(0,0,14,colors='grey',linestyles='dashed')
+    ax = plt.gca()
+    # for i, txt in enumerate(flatTrialName):
+    #     ax.annotate(txt, (flatTrialFuel[i], flatModelError[i]),fontsize=6)
+    ax.set(xlabel='fuel category', ylabel='error [m]')
+    plt.colorbar().set_label('$z_{CL} - z_s$ [m]')
+    plt.savefig(figpath + 'ErrorFuelType.pdf')
+    plt.close()

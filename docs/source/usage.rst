@@ -5,17 +5,21 @@ Introduction
 ---------------
 
 The contents of this package include two variable computation/extraction
-routines, several methods implementing CWIPP algorithms and a few plotting functions.
+routines, several methods implementing CWIPP algorithms and a collection of plotting functions.
 
 The key routines are summarized below:
 
-- :meth:`Plume.get_wf()` - Computes the characteristic vertical fire velocity scale
+- ``runCWIPP.py`` - Runs the plume rise model for a general case (in predictive mode). General steps are  summarized in :ref:`basic-usage` below.
 
+- ``runLESanalysis.py`` - Performs optimization of CWIPP model using synthetic WRF-SFIRE LES plume data. Details can be found :ref:`here <LES>`.
+
+
+
+.. _basic-usage:
 
 Basic Usage
 --------------
 
-.. _basic-usage:
 
 ``runCWIPP.py`` contains sample code for applying the CWIPP model in a forecast setting to predict the vertical smoke profile of a real-world wildfire plume
 
