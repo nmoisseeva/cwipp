@@ -31,14 +31,6 @@ class Plume:
     Tau : float
         characteristic timescale [s]
 
-    Methods
-    --------
-    get_I(flux2D, *Us):
-        Finds cross-wind fireline intensity parameter I
-    get_wf(self):
-        Applies plume rise parameterization to find characteristic time ($\Tau$) and velocity ($w_f$) scales
-    classify(self):
-        Determine whether plume penetrates the boundary layer top or not
     """
 
     def __init__(self, name):
@@ -120,7 +112,8 @@ class Plume:
 
     def get_wf(self):
         r"""
-        Applies plume rise parameterization to find characteristic time ($\Tau$) and velocity ($w_f$) scales
+
+        Finds characteristic time (Tau) and velocity (wf) scales.
 
         Returns
         ---------
@@ -138,6 +131,7 @@ class Plume:
 
     def classify(self):
         """
+
         Classifies the plume as penetrative (True) or boundary layer (False)
 
         Returns
@@ -153,8 +147,10 @@ class Plume:
 
 
 class LESplume(Plume):
-    """
-    Child Plume class used for operating on simulated plumes with full fields available (i.e. non-predictive mode)
+    r"""
+    Child Plume class used for simulated plumes (non-predictive mode).
+
+    Assumes full model fields are available.
 
     Attributes
     ----------
@@ -175,7 +171,9 @@ class LESplume(Plume):
 
     def get_zCL(self, pm, **kwargs):
         """
-        Finds quasi-stationary downwind profile and its IQR, extracts injection height and associated variables
+        Extracts mean injection height from LES.
+
+        Finds quasi-stationary downwind profile and its IQR, extracts injection height and associated variables.
 
         Parameters
         ----------
@@ -302,8 +300,10 @@ class LESplume(Plume):
 
 class MODplume(Plume):
     """
-    Child Plume class used for modelled plumes (i.e. predictive mode)
+    Child Plume class used for modelled plumes (predictive mode)
+
     ...
+
     Attributes
     ----------
     zCL : float
@@ -317,15 +317,14 @@ class MODplume(Plume):
         Applies iterative solution to parameterize plume injection height
     """
 
-    def iterate(self, C, biasFit=None, **kwargs):
+    def iterate(self, biasFit=None, **kwargs):
         r"""
         Applies iterative solution to parameterize plume injection height
+
         ...
 
         Parameters
         ----------
-        C : float
-            Empirical constant for $z^\prime$ equation
         biasFit : array_like, optional
             bias fit parameters. Default is m = 1, b = 0
         argout: boolean, optional
@@ -346,7 +345,7 @@ class MODplume(Plume):
         i_zs = np.nanargmin(abs(config.interpZ - self.zs))
 
         toSolve = lambda z : z  - b - m*(self.zs + \
-                        C/(np.sqrt(config.g*(self.sounding[int(z/config.zstep)] - self.THs)/(self.THs * (z-self.zs))))  * \
+                        1/(np.sqrt(config.g*(self.sounding[int(z/config.zstep)] - self.THs)/(self.THs * (z-self.zs))))  * \
                         (config.g*self.I*(z-self.zs)/(self.THs * self.zi))**(1/3.))
 
         zCL = fsolve(toSolve, self.zi, factor=0.1)
@@ -365,15 +364,14 @@ class MODplume(Plume):
             self.THzCL = THzCL
             self.zCL = float(zCL)
 
-    def explicit_solution(self, C, Gamma, ze, biasFit=None):
+    def explicit_solution(self, Gamma, ze, biasFit=None):
         r"""
-        Applies iterative solution to parameterize plume injection height
+        Applies explicit solution to parameterize plume injection height
+
         ...
 
         Parameters
         ----------
-        C : float
-            Empirical constant for $z^\prime$ equation
         biasFit : array_like, optional
             bias fit parameters. Default is m = 1, b = 0
 
@@ -389,6 +387,6 @@ class MODplume(Plume):
         else:
             m, b = 1, 0
 
-        zCL = m*((C**(3/2.)) * ((self.THs/config.g)**(1/4.)) * ((self.I/self.zi)**(0.5)) * ((1/Gamma)**(3/4.)) + ze) + b
+        zCL = m*(((self.THs/config.g)**(1/4.)) * ((self.I/self.zi)**(0.5)) * ((1/Gamma)**(3/4.)) + ze) + b
 
         self.zCL = zCL

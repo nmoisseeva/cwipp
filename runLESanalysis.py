@@ -22,8 +22,8 @@ import config
 imp.reload(config)
 import utils
 imp.reload(utils)
-import Plume
-imp.reload(Plume)
+import cwipp
+imp.reload(cwipp)
 import graphics
 imp.reload(graphics)
 
@@ -38,7 +38,7 @@ for nCase,Case in enumerate(RunList):
     csdict = utils.prepCS(Case)      #load cross-wind integrated smoke and all other data
 
     #initalize a plume object
-    plume = Plume.LESplume(Case)
+    plume = cwipp.LESplume(Case)
 
     #get quasi-stationary profile
     pm = ma.masked_where(csdict['pm25'][-1,:,:] <= config.PMcutoff, csdict['pm25'][-1,:,:] ) #mask all non-plume cells
@@ -83,35 +83,34 @@ for plume in penetrative_plumes:
     zPrimeGuess.append(plume.Tau * plume.wf)
     zPrimeTrue.append(plume.zCL - plume.zs)
 
-#obtain empirical parameter C
-firstGuess = np.array(zPrimeGuess)[:,np.newaxis]
-C, _, _, _ = np.linalg.lstsq(firstGuess, zPrimeTrue)
-C = float(C)
-C = 1
+# #obtain empirical parameter C
+# firstGuess = np.array(zPrimeGuess)[:,np.newaxis]
+# C, _, _, _ = np.linalg.lstsq(firstGuess, zPrimeTrue)
+# C = float(C)
+# C = 1
 
 #obtain bias correction factors
 zCLmodel, zCLtrue = [],[]
 for plume in penetrative_plumes:
-    estimate = C*plume.Tau*plume.wf + plume.zs
+    estimate = plume.Tau*plume.wf + plume.zs
     zCLmodel.append(estimate)
     zCLtrue.append(plume.zCL)
 
-zCLmodel, zCLtrue = utils.plume_error(penetrative_plumes, C)
+zCLmodel, zCLtrue = utils.plume_error(penetrative_plumes)
 biasFit = linregress(zCLmodel,zCLtrue)
 
 #plot model performance
-graphics.injection_model(penetrative_plumes, C, biasFit)
+graphics.injection_model(penetrative_plumes, biasFit)
 
 #===========test iterative solution, do bias correction===============
-imp.reload(Plume)
 raw_error, unbiased_error, true_zCL = [], [], []
 for plume in penetrative_plumes:
-    raw_plume = Plume.MODplume(plume.name)
+    raw_plume = cwipp.MODplume(plume.name)
     raw_plume.I = plume.I
-    raw_plume.iterate(C)
-    unbiased_plume = Plume.MODplume(plume.name)
+    raw_plume.iterate()
+    unbiased_plume = cwipp.MODplume(plume.name)
     unbiased_plume.I = plume.I
-    unbiased_plume.iterate(C,biasFit)
+    unbiased_plume.iterate(biasFit)
     true_zCL.append(plume.zCL)
     raw_error.append(plume.zCL - raw_plume.zCL)
     unbiased_error.append(plume.zCL - unbiased_plume.zCL)
@@ -119,10 +118,10 @@ for plume in penetrative_plumes:
 #     if plume.name in exclude_runs:
 #         continue
 #     else:
-#         raw_plume = Plume.MODplume(plume.name)
+#         raw_plume = cwipp.MODplume(plume.name)
 #         raw_plume.I = plume.I
 #         raw_plume.iterate(C)
-#         unbiased_plume = Plume.MODplume(plume.name)
+#         unbiased_plume = cwipp.MODplume(plume.name)
 #         unbiased_plume.I = plume.I
 #         unbiased_plume.iterate(C,biasFit)
 #         true_zCL.append(plume.zCL)
@@ -133,7 +132,6 @@ for plume in penetrative_plumes:
 graphics.bias_correction(raw_error, unbiased_error, true_zCL, figname='IterativeSolution')
 
 #================explicit solution and dimensionless groups=========================
-imp.reload(Plume)
 print('Fitting dimensionless groups')
 zStar, HStar, cI = [], [], []
 raw_error, unbiased_error, true_zCL = [], [], []
@@ -150,17 +148,17 @@ for plume in penetrative_plumes:
     Gamma = GammaFit[0]
     ze = -GammaFit[1]/GammaFit[0]
     zStar.append((plume.zCL - ze)/plume.zi)     #first dimensionless group
-    estimateH = C**(3/2.)*((plume.THs/(config.g*Gamma**3))**(1/4.)) * np.sqrt(plume.I/plume.zi**3)
+    estimateH = ((plume.THs/(config.g*Gamma**3))**(1/4.)) * np.sqrt(plume.I/plume.zi**3)
     HStar.append(estimateH)                     #second dimensionless group
     cI.append(plume.I)              #save intensity for colorizing the plot
 
     #explicit solution
-    raw_plume = Plume.MODplume(plume.name)
+    raw_plume = cwipp.MODplume(plume.name)
     raw_plume.I = plume.I
-    raw_plume.explicit_solution(C, Gamma, ze)
-    unbiased_plume = Plume.MODplume(plume.name)
+    raw_plume.explicit_solution(Gamma, ze)
+    unbiased_plume = cwipp.MODplume(plume.name)
     unbiased_plume.I = plume.I
-    unbiased_plume.explicit_solution(C, Gamma, ze, biasFit)
+    unbiased_plume.explicit_solution(Gamma, ze, biasFit)
     true_zCL.append(plume.zCL)
     raw_error.append(plume.zCL - raw_plume.zCL)
     unbiased_error.append(plume.zCL - unbiased_plume.zCL)
@@ -187,15 +185,15 @@ for nTrial in range(config.trials):
     trainSubset = []
     for i in TrainSet:
         trainSubset.append(penetrative_plumes[i])
-    zCLmodel, zCLtrue = utils.plume_error(trainSubset, C)
+    zCLmodel, zCLtrue = utils.plume_error(trainSubset)
     trialFit = linregress(zCLmodel, zCLtrue)
     Rstore.append(trialFit[2])
 
     test_error, test_truth, fuel_cat = [], [], []
     for nTest in TestSet:
-        testPlume = Plume.MODplume(penetrative_plumes[nTest].name)
+        testPlume = cwipp.MODplume(penetrative_plumes[nTest].name)
         testPlume.I = penetrative_plumes[nTest].I
-        test_estimate, TH_dump = testPlume.iterate(C, trialFit, argout=True)              #####STOPPPED HERE: NEED TO ADD POLYMORPHISM, TO PROVIDE OUTPUT TO FUNCITON (instead of assigning attributes)
+        test_estimate, TH_dump = testPlume.iterate(trialFit, argout=True)              #####STOPPPED HERE: NEED TO ADD POLYMORPHISM, TO PROVIDE OUTPUT TO FUNCITON (instead of assigning attributes)
         truth = penetrative_plumes[nTest].zCL
         test_truth.append(truth)
         test_error.append(truth - test_estimate)

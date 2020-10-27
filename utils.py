@@ -116,7 +116,7 @@ def prepCS(Case):
         print('...Generated new profiles' )
     return csdict
 
-def plume_error(plumes, C):
+def plume_error(plumes):
     r'''
     Get true and parameterized injection height for a collection of plumes
     ...
@@ -124,8 +124,7 @@ def plume_error(plumes, C):
     -----------
     plumes : list
         list containing plume objects
-    C : float
-        empirical fit parameter
+
 
     Returns:
     -------
@@ -136,7 +135,7 @@ def plume_error(plumes, C):
     '''
     zCLmodel, zCLtrue = [],[]
     for plume in plumes:
-        estimate = C*plume.Tau*plume.wf + plume.zs
+        estimate = plume.Tau*plume.wf + plume.zs
         zCLmodel.append(estimate)
         zCLtrue.append(plume.zCL)
 

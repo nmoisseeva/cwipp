@@ -186,7 +186,7 @@ def plot_soundings(all_plumes):
     plt.close()
 
 
-def injection_model(all_plumes,C,biasFit):
+def injection_model(all_plumes,biasFit):
 
     #create a storage directory for plots
     figpath = config.figdir + 'injection/'
@@ -197,7 +197,7 @@ def injection_model(all_plumes,C,biasFit):
     true_array = []
     c_array = []
     for plume in all_plumes:
-        modelled_zCL = C*plume.Tau*plume.wf + plume.zs
+        modelled_zCL = plume.Tau*plume.wf + plume.zs
         modelled_array.append(modelled_zCL)
         true_array.append(plume.zCL)
         c_array.append(plume.I)
