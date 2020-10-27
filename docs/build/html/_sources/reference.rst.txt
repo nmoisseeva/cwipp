@@ -11,7 +11,6 @@ Plume Classes
 
 .. autosummary::
    :nosignatures:
-   :recursive:
    :toctree:
 
    cwipp.Plume
@@ -25,7 +24,6 @@ Plume Base Class Methods
 Common methods, which apply to all plumes.
 
 .. autosummary::
-   :recursive:
    :nosignatures:
    :toctree:
 
@@ -40,7 +38,6 @@ LESplume Class Methods
 These methods can be applied for plumes with full cross-sectional data available from numerical simulations.
 
 .. autosummary::
-   :recursive:
    :nosignatures:
    :toctree:
 
@@ -53,7 +50,6 @@ MODplume Class Methods
 Methods that apply to plumes without full cross-sectional data available (a.k.a forecast mode).
 
 .. autosummary::
-  :recursive:
   :nosignatures:
   :toctree:
 

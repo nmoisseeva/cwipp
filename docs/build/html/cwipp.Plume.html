@@ -1,18 +1,15 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>cwipp.Plume &mdash; PR_model October 2020 documentation</title>
+  <title>cwipp.Plume &mdash; CWIPP October 2020 documentation</title>
   
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
 
   
   
@@ -20,24 +17,26 @@
   
 
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="cwipp.LESplume" href="cwipp.LESplume.html" />
-    <link rel="prev" title="Reference Guide" href="reference.html" /> 
+    <link rel="prev" title="Documentation" href="reference.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -51,7 +50,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home" alt="Documentation Home"> PR_model
+            <a href="index.html" class="icon icon-home"> CWIPP
           
 
           
@@ -74,7 +73,6 @@
           
         </div>
 
-        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -86,7 +84,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">How To Use</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="reference.html">Reference Guide</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="reference.html">Documentation</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="reference.html#plume-classes">Plume Classes</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">cwipp.Plume</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cwipp.LESplume.html">cwipp.LESplume</a></li>
@@ -98,13 +96,12 @@
 <li class="toctree-l2"><a class="reference internal" href="reference.html#modplume-class-methods">MODplume Class Methods</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="LES.html">CWIPP Optimization with LES Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LES.html">Optimization with LES Data</a></li>
 </ul>
 
             
           
         </div>
-        
       </div>
     </nav>
 
@@ -114,7 +111,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">PR_model</a>
+          <a href="index.html">CWIPP</a>
         
       </nav>
 
@@ -143,9 +140,9 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><a href="index.html">Docs</a> &raquo;</li>
         
-          <li><a href="reference.html">Reference Guide</a> &raquo;</li>
+          <li><a href="reference.html">Documentation</a> &raquo;</li>
         
       <li>cwipp.Plume</li>
     
@@ -168,128 +165,155 @@
             
   <div class="section" id="cwipp-plume">
 <h1>cwipp.Plume<a class="headerlink" href="#cwipp-plume" title="Permalink to this headline">¶</a></h1>
-<dl class="py class">
+<dl class="class">
 <dt id="cwipp.Plume">
-<em class="property">class </em><code class="sig-prename descclassname">cwipp.</code><code class="sig-name descname">Plume</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cwipp.Plume" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">cwipp.</code><code class="descname">Plume</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#cwipp.Plume" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parent Plume class.</p>
-<dl class="py attribute">
+<dl class="attribute">
 <dt id="cwipp.Plume.name">
-<code class="sig-name descname">name</code><a class="headerlink" href="#cwipp.Plume.name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">name</code><a class="headerlink" href="#cwipp.Plume.name" title="Permalink to this definition">¶</a></dt>
 <dd><p>plume name</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py attribute">
+<dl class="attribute">
 <dt id="cwipp.Plume.zi">
-<code class="sig-name descname">zi</code><a class="headerlink" href="#cwipp.Plume.zi" title="Permalink to this definition">¶</a></dt>
+<code class="descname">zi</code><a class="headerlink" href="#cwipp.Plume.zi" title="Permalink to this definition">¶</a></dt>
 <dd><p>boundary layer height [m]</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py attribute">
+<dl class="attribute">
 <dt id="cwipp.Plume.zs">
-<code class="sig-name descname">zs</code><a class="headerlink" href="#cwipp.Plume.zs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">zs</code><a class="headerlink" href="#cwipp.Plume.zs" title="Permalink to this definition">¶</a></dt>
 <dd><p>refernce height (zi * BLfrac) [m]</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py attribute">
+<dl class="attribute">
 <dt id="cwipp.Plume.sounding">
-<code class="sig-name descname">sounding</code><a class="headerlink" href="#cwipp.Plume.sounding" title="Permalink to this definition">¶</a></dt>
+<code class="descname">sounding</code><a class="headerlink" href="#cwipp.Plume.sounding" title="Permalink to this definition">¶</a></dt>
 <dd><p>vertical potential temperature sounding on interpolated analysis levels [K]</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>ndarray</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">ndarray</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py attribute">
+<dl class="attribute">
 <dt id="cwipp.Plume.THs">
-<code class="sig-name descname">THs</code><a class="headerlink" href="#cwipp.Plume.THs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">THs</code><a class="headerlink" href="#cwipp.Plume.THs" title="Permalink to this definition">¶</a></dt>
 <dd><p>ambient potential tempreature at reference height zs [K]</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py attribute">
+<dl class="attribute">
 <dt id="cwipp.Plume.I">
-<code class="sig-name descname">I</code><a class="headerlink" href="#cwipp.Plume.I" title="Permalink to this definition">¶</a></dt>
+<code class="descname">I</code><a class="headerlink" href="#cwipp.Plume.I" title="Permalink to this definition">¶</a></dt>
 <dd><p>fireline intensity parameter [K m2 s-1]</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py attribute">
+<dl class="attribute">
 <dt id="cwipp.Plume.wf">
-<code class="sig-name descname">wf</code><a class="headerlink" href="#cwipp.Plume.wf" title="Permalink to this definition">¶</a></dt>
+<code class="descname">wf</code><a class="headerlink" href="#cwipp.Plume.wf" title="Permalink to this definition">¶</a></dt>
 <dd><p>characteristic fire velocity scale [m s-1]</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py attribute">
+<dl class="attribute">
 <dt id="cwipp.Plume.Tau">
-<code class="sig-name descname">Tau</code><a class="headerlink" href="#cwipp.Plume.Tau" title="Permalink to this definition">¶</a></dt>
+<code class="descname">Tau</code><a class="headerlink" href="#cwipp.Plume.Tau" title="Permalink to this definition">¶</a></dt>
 <dd><p>characteristic timescale [s]</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py method">
+<dl class="method">
 <dt id="cwipp.Plume.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cwipp.Plume.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#cwipp.Plume.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs the plume object with some inital attributes
 …</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – plume name</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – plume name</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
+<table border="1" class="longtable docutils">
 <colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
+<col width="10%" />
+<col width="90%" />
 </colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cwipp.Plume.__init__" title="cwipp.Plume.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(name)</p></td>
-<td><p>Constructs the plume object with some inital attributes</p></td>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#cwipp.Plume.__init__" title="cwipp.Plume.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(name)</td>
+<td>Constructs the plume object with some inital attributes</td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="cwipp.Plume.classify.html#cwipp.Plume.classify" title="cwipp.Plume.classify"><code class="xref py py-obj docutils literal notranslate"><span class="pre">classify</span></code></a>()</p></td>
-<td><p>Classifies the plume as penetrative (True) or boundary layer (False)</p></td>
+<tr class="row-even"><td><a class="reference internal" href="cwipp.Plume.classify.html#cwipp.Plume.classify" title="cwipp.Plume.classify"><code class="xref py py-obj docutils literal notranslate"><span class="pre">classify</span></code></a>()</td>
+<td>Classifies the plume as penetrative (True) or boundary layer (False)</td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="cwipp.Plume.get_I.html#cwipp.Plume.get_I" title="cwipp.Plume.get_I"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_I</span></code></a>(flux2D, length, *Us)</p></td>
-<td><p>Finds cross-wind fireline intensity parameter I</p></td>
+<tr class="row-odd"><td><a class="reference internal" href="cwipp.Plume.get_I.html#cwipp.Plume.get_I" title="cwipp.Plume.get_I"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_I</span></code></a>(flux2D,&nbsp;length,&nbsp;*Us)</td>
+<td>Finds cross-wind fireline intensity parameter I</td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="cwipp.Plume.get_wf.html#cwipp.Plume.get_wf" title="cwipp.Plume.get_wf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_wf</span></code></a>()</p></td>
-<td><p>Finds characteristic time (Tau) and velocity (wf) scales.</p></td>
+<tr class="row-even"><td><a class="reference internal" href="cwipp.Plume.get_wf.html#cwipp.Plume.get_wf" title="cwipp.Plume.get_wf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_wf</span></code></a>()</td>
+<td>Finds characteristic time (Tau) and velocity (wf) scales.</td>
 </tr>
 </tbody>
 </table>
@@ -308,7 +332,7 @@
         <a href="cwipp.LESplume.html" class="btn btn-neutral float-right" title="cwipp.LESplume" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="reference.html" class="btn btn-neutral float-left" title="Reference Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="reference.html" class="btn btn-neutral float-left" title="Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -317,19 +341,11 @@
 
   <div role="contentinfo">
     <p>
-        
         &copy; Copyright 2020, Nadya Moisseeva
 
     </p>
   </div>
-    
-    
-    
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
-    
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -340,6 +356,7 @@
 
   </div>
   
+
 
   <script type="text/javascript">
       jQuery(function () {
