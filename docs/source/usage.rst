@@ -4,8 +4,7 @@ How To Use
 Introduction
 ---------------
 
-The contents of this package include two process-based routines
-routines, several methods implementing CWIPP algorithms and a collection of plotting functions.
+The contents of this package include two process-based routines, several methods implementing CWIPP algorithms and a collection of plotting functions.
 
 The key routines are summarized below:
 
@@ -23,6 +22,8 @@ Basic Usage
 
 ``runCWIPP.py`` contains sample code for applying the CWIPP model in a forecast setting to predict the vertical smoke profile of a real-world wildfire plume
 
+Key configuration setting for this analysis are contained in ``config.py``. Their descriptions can be found in :ref:`config-table`.
+
 .. .. code-block:: python
 ..
 ..     from __future__ import print_function
@@ -36,3 +37,37 @@ Basic Usage
 ..     slp = getvar(ncfile, "slp")
 ..
 ..     print(slp)
+
+Configuration Settings
+-------------------------------
+.. _config-table:
+
+
+.. list-table::
+   :widths: 30 10 60
+   :header-rows: 1
+
+   * - Parameter
+     - Type
+     - Description
+   * - **zstep**
+     - int
+     - height interpolation step for analysis
+   * - **interpZ**
+     - 1D array
+     - vector corresponding to vertical levels for analysis
+   * - **BLfrac**
+     - float
+     - fraction of BL height to use as reference height z_s (default = 0.75)
+   * - **g**
+     - float
+     - gravity constant (9.81 m/s)
+   * - **PMcutoff**
+     - float
+     - minimum PM value to define plume edge
+   * - **biasFit**
+     - list
+     - default model bias fit parameters ([0.9195, 137.9193])
+   * - **figdir**
+     - str
+     - Set path for storing figures

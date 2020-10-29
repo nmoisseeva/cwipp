@@ -6,44 +6,58 @@ Optimization with LES Data
 
 The main routine contained in ``runLESanalysis.py`` performs model optimization and bias correction using Large Eddy Simulation (LES) data from WRF-SFIRE. This routine is not required for running the plume rise model in predictive mode. Default bias parameters stored in ``config.py`` will be sourced for all general cases.
 
-Key configuration setting for this analysis are contained in ``config.py``. Their descriptions can be found in :ref:`config-table`.
+
 
 
 .. note::
 
    Running this part of the code requires access to interpolated cross-sectional data from WRF-SFIRE generated synthetic plumes.
 
+Configuration for LES Optimization
+----------------------------------
+.. _config-les-table:
 
-Table of Configuration Settings
--------------------------------
-.. _config-table:
 
+.. list-table::
+  :widths: 30 10 60
+  :header-rows: 1
 
-.. list-table:: Configuration Settings
-   :widths: 30 10 60
-   :header-rows: 1
-
-   * - Parameter
-     - Type
-     - Description
-   * - **zstep**
-     - int
-     - height interpolation step for analysis
-   * - **interpZ**
-     - 1D array
-     - vector corresponding to vertical levels for analysis
-   * - **BLfrac**
-     - float
-     - fraction of BL height to use as reference height z_s (default = 0.75)
-   * - **g**
-     - float
-     - gravity constant (9.81 m/s)
-   * - **PMcutoff**
-     - float
-     - minimum PM value to define plume edge
-   * - **biasFit**
-     - list
-     - default model bias fit parameters ([0.9195, 137.9193])
-   * - **figdir**
-     - str
-     - Set path for storing figures
+  * - Parameter
+    - Type
+    - Description
+  * - **trials**
+    - int
+    - number of boot-strapping trials
+  * - **testPortion**
+    - float
+    - fraction of data to reserve for independent verification
+  * - **wrfdir**
+    - str
+    - path to interpolated cross-sectional plume data
+  * - **filename**
+    - str
+    - naming pattern for LES data
+  * - **exclude_runs**
+    - list of str
+    - runs to exclude from analysis
+  * - **dz**
+    - int
+    - vertical level spacing of LES data
+  * - **dx**
+    - int
+    - grids spacing of LES data in x-direction
+  * - **dy**
+    - int
+    - grids spacing of LES data in y-direction
+  * - **ign_over**
+    - int
+    - number of history intervals to exclude from analysis start
+  * - **plot_profiles**
+    - boolean
+    - flag to plot profiles
+  * - **plot_conservedvars**
+    - boolean
+    - flag to make conserved variable plots
+  * - **plot_zcl**
+    - boolean
+    - flag to make injection height plots

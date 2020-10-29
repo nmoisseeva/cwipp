@@ -29,6 +29,7 @@ figdir = '/Users/nmoisseeva/code/pr_model/figs/'
 
 #path to interpolated cross-sectional plume data
 wrfdir = '/Users/nmoisseeva/data/plume/main/interp/'
+filename = 'wrfcs_*'
 
 #grid spacing of interpolated LES data
 dz = 40
@@ -36,7 +37,7 @@ dx = 40.
 dy = 40.
 
 #which runs to process
-dirpath = wrfdir+'wrfcs_*'          #naming convention for cross-sections
+
 exclude_runs = ['W5F4R0','W5F9R1','W5F8R3','W5F9R3','W5F1R3','W5F13R0','W5F1R7T','W5F8R7T','W5F9R7T']
 exclude_bad = ['W5F4R0','W5F13R0']
 
@@ -53,5 +54,6 @@ trials = 10                     #number of times to rerun the model
 testPortion = 0.2               #portion of data to reserve for testing the model
 
 #------------------- do NOT modify unless sure----------
+dirpath = wrfdir + filename         #naming convention for cross-sections
 dirlist = glob.glob(dirpath)        #get directory listing
 tag = [i[len(dirpath)-1:-4] for i in dirlist]

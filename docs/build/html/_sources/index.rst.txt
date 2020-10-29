@@ -28,6 +28,7 @@ https://firesmoke.ca/
    ./install
    ./usage
    ./reference
+   ./graphics
    ./LES
 
 
