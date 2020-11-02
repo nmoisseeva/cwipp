@@ -4,8 +4,7 @@ How To Use
 Introduction
 ---------------
 
-The contents of this package include two process-based routines
-routines, several methods implementing CWIPP algorithms and a collection of plotting functions.
+The contents of this package include two process-based routines, several methods implementing CWIPP algorithms and a collection of plotting functions.
 
 The key routines are summarized below:
 
@@ -44,7 +43,7 @@ Configuration Settings
 .. _config-table:
 
 
-.. list-table:: 
+.. list-table::
    :widths: 30 10 60
    :header-rows: 1
 
