@@ -27,6 +27,20 @@ imp.reload(cwipp)
 import graphics
 imp.reload(graphics)
 
+
+'''
+loop through all plumes
+	get soundings
+	get zi, zs, THs values
+	get fire intensity
+	apply iterative solution
+	classify plume
+	determine plume top
+	determine spread
+	model full profile
+'''
+
+
 RunList = [i for i in config.tag if i not in config.exclude_bad]         #load a list of cases
 runCnt = len(RunList)                                                  #count number of cases
 # exclude_runs = ['W5F9R1','W5F8R3','W5F9R3','W5F1R3','W5F1R7T','W5F8R7T','W5F9R7T']
