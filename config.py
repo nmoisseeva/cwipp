@@ -23,7 +23,7 @@ biasFit = [0.9195, 137.9193]
 
 #figure storage directory
 figdir = '/Users/nmoisseeva/code/pr_model/figs/'
-
+input_data = '/Users/nmoisseeva/code/pr_model/fires.npy'
 
 #---------------------LES mode settings----------------
 

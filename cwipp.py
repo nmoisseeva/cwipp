@@ -43,9 +43,51 @@ class Plume:
         name: str
             plume name
         """
+        #
+        # #get initial raw sounding (from cross-section wrfcs data)
+        # T0 = np.load(config.wrfdir + 'profiles/profT0' + name + '.npy')    #load initial temperature profile
+        #
+        # #get BL height
+        # zi = utils.get_zi(T0,config.dz)                    #calculate BL height
+        # zs = zi * config.BLfrac
+        #
+        # #interpolate sounding to analysis levels
+        # metlvls = np.arange(0,len(T0)*config.dz,config.dz)
+        # interpT= interp1d(metlvls,T0,fill_value='extrapolate')
+        # T0interp = interpT(config.interpZ)
+        # i_zs = np.argmin(abs(config.interpZ - zs))
+        # THs = T0interp[i_zs]
 
-        #get initial raw sounding (from cross-section wrfcs data)
-        T0 = np.load(config.wrfdir + 'profiles/profT0' + name + '.npy')    #load initial temperature profile
+        self.name = name
+        # self.zi = zi
+        # self.zs = zs
+        # self.sounding = T0interp
+        # self.THs = THs
+
+    def get_sounding(self, T0):
+        """
+        Calculates attributes relating to vertical potential temperature profile
+        ...
+
+        Parameters
+        -----------
+        T0: 1D array
+            potential temperature profile on host model levels (not interpolated)
+
+        Returns
+        ---------
+        zi : float
+            boundary layer height [m]
+        zs : float
+            refernce height (zi * BLfrac) [m]
+        sounding: ndarray
+            vertical potential temperature sounding on interpolated analysis levels [K]
+        THs : float
+            ambient potential tempreature at reference height zs [K]
+        """
+
+        # #get initial raw sounding (from cross-section wrfcs data)
+        # T0 = np.load(config.wrfdir + 'profiles/profT0' + name + '.npy')    #load initial temperature profile
 
         #get BL height
         zi = utils.get_zi(T0,config.dz)                    #calculate BL height
@@ -58,7 +100,6 @@ class Plume:
         i_zs = np.argmin(abs(config.interpZ - zs))
         THs = T0interp[i_zs]
 
-        self.name = name
         self.zi = zi
         self.zs = zs
         self.sounding = T0interp

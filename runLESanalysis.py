@@ -40,6 +40,10 @@ for nCase,Case in enumerate(RunList):
     #initalize a plume object
     plume = cwipp.LESplume(Case)
 
+    #calculate sounding-related variables
+    T0 = np.load(config.wrfdir + 'profiles/profT0' + name + '.npy')
+    plume.get_sounding(T0) #!!!!! NEED TO TEST THIS
+
     #get quasi-stationary profile
     pm = ma.masked_where(csdict['pm25'][-1,:,:] <= config.PMcutoff, csdict['pm25'][-1,:,:] ) #mask all non-plume cells
     plume.get_zCL(pm,plot=config.plot_zcl,csdict=csdict)
