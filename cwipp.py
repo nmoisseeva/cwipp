@@ -71,7 +71,7 @@ class Plume:
 
         Parameters
         -----------
-        T0: 1D array
+        T0: ndarray
             potential temperature profile on host model levels (not interpolated)
 
         Returns
@@ -431,3 +431,46 @@ class MODplume(Plume):
         zCL = m*(((self.THs/config.g)**(1/4.)) * ((self.I/self.zi)**(0.5)) * ((1/Gamma)**(3/4.)) + ze) + b
 
         self.zCL = zCL
+
+    def get_profile(self):
+        r"""
+        Parameterization of the full normalized vertical smoke profile
+
+        ...
+
+        Parameters
+        ----------
+
+
+        Returns
+        -------
+        profile : ndarray
+            1D vector corresponding to quasi-stationary downwind PM profile
+        """
+
+        profile = np.empty((len(config.interpZ))) * np.nan
+
+        if not self.penetrative:
+            profile = 1
+        elif self.penetrative:
+            self.get_wf()
+
+            #get Deadorff's velocity for spread
+            wD = (config.g * self.zi * 0.13 / self.THs)**(1/3.) #!!!! HARDCODED SURFACE HEAT FLUX
+
+            sigma_top = (self.zCL - self.zs)/3.
+            if self.wf/wD < 1.5:
+                Rw = self.U/self.wf
+            else:
+                Rw = self.U/(self.wf - wD)
+
+            if Rw > 1:
+                sigma_bottom = Rw * sigma_top
+            else:
+                sigma_bottom = sigma_top
+
+            izCL = np.argmin(abs(config.interpZ - self.zCL))
+            profile[izCL:] = np.exp(-0.5*((config.interpZ[izCL:] - self.zCL)/sigma_top)**2)
+            profile[:izCL+1] = np.exp(-0.5*((config.interpZ[:izCL+1] - self.zCL)/sigma_bottom)**2)
+
+            self.profile = profile

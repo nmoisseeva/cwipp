@@ -15,7 +15,6 @@ interpZ = np.arange(0, 4001, zstep)     #set up interpolated vertical profile
 BLfrac = 0.75                   #fraction of BL height to use as reference height z_s (default = 0.75)
 
 #common analysis variables
-g = 9.81                        #gravity constant
 PMcutoff = 20                   #minimum PM value to define plume edge
 
 #default model bias fit parameters
@@ -54,6 +53,7 @@ trials = 10                     #number of times to rerun the model
 testPortion = 0.2               #portion of data to reserve for testing the model
 
 #------------------- do NOT modify unless sure----------
+g = 9.81                            #gravity constant
 dirpath = wrfdir + filename         #naming convention for cross-sections
 dirlist = glob.glob(dirpath)        #get directory listing
 tag = [i[len(dirpath)-1:-4] for i in dirlist]
