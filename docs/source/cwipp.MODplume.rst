@@ -17,6 +17,8 @@
       ~MODplume.classify
       ~MODplume.explicit_solution
       ~MODplume.get_I
+      ~MODplume.get_profile
+      ~MODplume.get_sounding
       ~MODplume.get_wf
       ~MODplume.iterate
    

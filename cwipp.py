@@ -9,7 +9,7 @@ from scipy.interpolate import interp1d
 
 
 class Plume:
-    r"""
+    """
     Parent Plume class.
 
     Attributes
@@ -36,7 +36,6 @@ class Plume:
     def __init__(self, name):
         """
         Constructs the plume object with some inital attributes
-        ...
 
         Parameters
         -----------
@@ -67,7 +66,6 @@ class Plume:
     def get_sounding(self, T0):
         """
         Calculates attributes relating to vertical potential temperature profile
-        ...
 
         Parameters
         -----------
@@ -152,7 +150,7 @@ class Plume:
         self.I = I
 
     def get_wf(self):
-        r"""
+        """
 
         Finds characteristic time (Tau) and velocity (wf) scales.
 
@@ -188,7 +186,7 @@ class Plume:
 
 
 class LESplume(Plume):
-    r"""
+    """
     Child Plume class used for simulated plumes (non-predictive mode).
 
     Assumes full model fields are available.
@@ -343,8 +341,6 @@ class MODplume(Plume):
     """
     Child Plume class used for modelled plumes (predictive mode)
 
-    ...
-
     Attributes
     ----------
     zCL : float
@@ -359,10 +355,8 @@ class MODplume(Plume):
     """
 
     def iterate(self, biasFit=None, **kwargs):
-        r"""
+        """
         Applies iterative solution to parameterize plume injection height
-
-        ...
 
         Parameters
         ----------
@@ -406,10 +400,8 @@ class MODplume(Plume):
             self.zCL = float(zCL)
 
     def explicit_solution(self, Gamma, ze, biasFit=None):
-        r"""
+        """
         Applies explicit solution to parameterize plume injection height
-
-        ...
 
         Parameters
         ----------
@@ -433,10 +425,9 @@ class MODplume(Plume):
         self.zCL = zCL
 
     def get_profile(self):
-        r"""
+        """
         Parameterization of the full normalized vertical smoke profile
 
-        ...
 
         Parameters
         ----------

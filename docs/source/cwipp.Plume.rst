@@ -16,6 +16,7 @@
       ~Plume.__init__
       ~Plume.classify
       ~Plume.get_I
+      ~Plume.get_sounding
       ~Plume.get_wf
    
    

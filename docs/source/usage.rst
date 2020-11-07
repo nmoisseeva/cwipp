@@ -50,6 +50,9 @@ Configuration Settings
    * - Parameter
      - Type
      - Description
+   * - **input_data**
+     - dict
+     - input information about fires (id, soundings, intensity)
    * - **zstep**
      - int
      - height interpolation step for analysis
@@ -59,9 +62,6 @@ Configuration Settings
    * - **BLfrac**
      - float
      - fraction of BL height to use as reference height z_s (default = 0.75)
-   * - **g**
-     - float
-     - gravity constant (9.81 m/s)
    * - **PMcutoff**
      - float
      - minimum PM value to define plume edge

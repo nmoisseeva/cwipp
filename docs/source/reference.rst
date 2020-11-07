@@ -27,6 +27,7 @@ Common methods, which apply to all plumes.
    :nosignatures:
    :toctree:
 
+   Plume.get_sounding
    Plume.get_I
    Plume.get_wf
    Plume.classify
@@ -55,3 +56,4 @@ Methods that apply to plumes without full cross-sectional data available (a.k.a 
 
   MODplume.iterate
   MODplume.explicit_solution
+  MODplume.get_profile

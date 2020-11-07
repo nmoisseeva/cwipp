@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>cwipp.Plume.get_wf &mdash; CWIPP October 2020 documentation</title>
+  <title>cwipp.MODplume.get_profile &mdash; CWIPP October 2020 documentation</title>
   
 
   
@@ -36,8 +36,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="cwipp.Plume.classify" href="cwipp.Plume.classify.html" />
-    <link rel="prev" title="cwipp.Plume.get_I" href="cwipp.Plume.get_I.html" /> 
+    <link rel="next" title="Plotting Functions" href="graphics.html" />
+    <link rel="prev" title="cwipp.MODplume.explicit_solution" href="cwipp.MODplume.explicit_solution.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -88,15 +88,14 @@
 <li class="toctree-l1"><a class="reference internal" href="usage.html">How To Use</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="reference.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="reference.html#plume-classes">Plume Classes</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="reference.html#plume-base-class-methods">Plume Base Class Methods</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="cwipp.Plume.get_sounding.html">cwipp.Plume.get_sounding</a></li>
-<li class="toctree-l3"><a class="reference internal" href="cwipp.Plume.get_I.html">cwipp.Plume.get_I</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">cwipp.Plume.get_wf</a></li>
-<li class="toctree-l3"><a class="reference internal" href="cwipp.Plume.classify.html">cwipp.Plume.classify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#plume-base-class-methods">Plume Base Class Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#lesplume-class-methods">LESplume Class Methods</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="reference.html#modplume-class-methods">MODplume Class Methods</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cwipp.MODplume.iterate.html">cwipp.MODplume.iterate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cwipp.MODplume.explicit_solution.html">cwipp.MODplume.explicit_solution</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">cwipp.MODplume.get_profile</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="reference.html#lesplume-class-methods">LESplume Class Methods</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference.html#modplume-class-methods">MODplume Class Methods</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="graphics.html">Plotting Functions</a></li>
@@ -149,13 +148,13 @@
         
           <li><a href="reference.html">Documentation</a> &raquo;</li>
         
-      <li>cwipp.Plume.get_wf</li>
+      <li>cwipp.MODplume.get_profile</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/cwipp.Plume.get_wf.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/cwipp.MODplume.get_profile.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -168,19 +167,18 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="cwipp-plume-get-wf">
-<h1>cwipp.Plume.get_wf<a class="headerlink" href="#cwipp-plume-get-wf" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="cwipp-modplume-get-profile">
+<h1>cwipp.MODplume.get_profile<a class="headerlink" href="#cwipp-modplume-get-profile" title="Permalink to this headline">¶</a></h1>
 <dl class="py method">
-<dt id="cwipp.Plume.get_wf">
-<code class="sig-prename descclassname">Plume.</code><code class="sig-name descname">get_wf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cwipp.Plume.get_wf" title="Permalink to this definition">¶</a></dt>
-<dd><p>Finds characteristic time (Tau) and velocity (wf) scales.</p>
+<dt id="cwipp.MODplume.get_profile">
+<code class="sig-prename descclassname">MODplume.</code><code class="sig-name descname">get_profile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cwipp.MODplume.get_profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parameterization of the full normalized vertical smoke profile</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><ul class="simple">
-<li><p><strong>wf</strong> (<em>float</em>) – characteristic fire velocity scale [m s-1]</p></li>
-<li><p><strong>Tau</strong> (<em>float</em>) – characteristic timescale [s]</p></li>
-</ul>
-</p>
+<dd class="field-odd"><p><strong>profile</strong> – 1D vector corresponding to quasi-stationary downwind PM profile</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -195,10 +193,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="cwipp.Plume.classify.html" class="btn btn-neutral float-right" title="cwipp.Plume.classify" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="graphics.html" class="btn btn-neutral float-right" title="Plotting Functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="cwipp.Plume.get_I.html" class="btn btn-neutral float-left" title="cwipp.Plume.get_I" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="cwipp.MODplume.explicit_solution.html" class="btn btn-neutral float-left" title="cwipp.MODplume.explicit_solution" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
