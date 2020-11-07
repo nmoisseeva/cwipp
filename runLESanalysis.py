@@ -41,7 +41,7 @@ for nCase,Case in enumerate(RunList):
     plume = cwipp.LESplume(Case)
 
     #calculate sounding-related variables
-    T0 = np.load(config.wrfdir + 'profiles/profT0' + name + '.npy')
+    T0 = np.load(config.wrfdir + 'profiles/profT0' + plume.name + '.npy')
     plume.get_sounding(T0) #!!!!! NEED TO TEST THIS
 
     #get quasi-stationary profile
@@ -109,11 +109,14 @@ graphics.injection_model(penetrative_plumes, biasFit)
 #===========test iterative solution, do bias correction===============
 raw_error, unbiased_error, true_zCL = [], [], []
 for plume in penetrative_plumes:
+    T0 = np.load(config.wrfdir + 'profiles/profT0' + plume.name + '.npy')
     raw_plume = cwipp.MODplume(plume.name)
     raw_plume.I = plume.I
+    raw_plume.get_sounding(T0)
     raw_plume.iterate()
     unbiased_plume = cwipp.MODplume(plume.name)
     unbiased_plume.I = plume.I
+    unbiased_plume.get_sounding(T0)
     unbiased_plume.iterate(biasFit)
     true_zCL.append(plume.zCL)
     raw_error.append(plume.zCL - raw_plume.zCL)
@@ -157,11 +160,14 @@ for plume in penetrative_plumes:
     cI.append(plume.I)              #save intensity for colorizing the plot
 
     #explicit solution
+    T0 = np.load(config.wrfdir + 'profiles/profT0' + plume.name + '.npy')
     raw_plume = cwipp.MODplume(plume.name)
     raw_plume.I = plume.I
+    raw_plume.get_sounding(T0)
     raw_plume.explicit_solution(Gamma, ze)
     unbiased_plume = cwipp.MODplume(plume.name)
     unbiased_plume.I = plume.I
+    unbiased_plume.get_sounding(T0)
     unbiased_plume.explicit_solution(Gamma, ze, biasFit)
     true_zCL.append(plume.zCL)
     raw_error.append(plume.zCL - raw_plume.zCL)
@@ -173,7 +179,7 @@ graphics.dimensionless_groups(HStar,zStar,cI)
 
 #plot bias correction statistics on explicit solution
 graphics.bias_correction(raw_error, unbiased_error, true_zCL, figname='ExplicitSolution')
-
+#####STOPPED TESTING HERE
 #======================train and test regression model===================
 
 #create storage arrays for R values, modelled zCL, model error and trail subsets of true zCL derived from data

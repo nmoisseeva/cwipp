@@ -20,21 +20,22 @@ imp.reload(graphics)
 inputs = np.load(config.input_data,allow_pickle=True).item()
 
 for fire in inputs:
-	print('Processing fire: %s' %fire)
-	case = cwipp.MODplume(fire)
-	case.get_sounding(inputs[case.name]['sounding'])
-	case.I = inputs[case.name]['I']
-	case.iterate(config.biasFit)
-	case.classify()
-	case.get_profile()
-
-	#temporary plot for sanity check
-	plt.figure()
-	plt.plot(fires[case.name]['truth'], config.interpZ)
-	plt.plot(case.profile,config.interpZ)
-	plt.show()
-
-	#write back to fires dictionary
-	inputs[case.name]['profile'] = case.profile
+    print('Processing fire: %s' %fire)
+    case = cwipp.MODplume(fire)
+    case.get_sounding(inputs[case.name]['sounding'])
+    case.I = inputs[case.name]['I']
+    case.iterate(config.biasFit)
+    case.classify()
+    # case.get_profile()
+    #temporary plot for sanity check
+    plt.figure()
+    plt.plot(inputs[case.name]['truth'], config.interpZ)
+    plt.plot(case.sounding, config.interpZ)
+    # plt.plot(case.profile,config.interpZ)
+    plt.axhline(y = case.zCL)
+    plt.show()
+    #
+	# #write back to fires dictionary
+	# inputs[case.name]['profile'] = case.profile
 
 # np.save('output.npy',inputs, allow_pickle=True)
