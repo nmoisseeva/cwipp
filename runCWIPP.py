@@ -25,6 +25,9 @@ for fire in inputs:
     case.iterate(config.biasFit)
     case.classify()
 
+    #next step to incroporate vertical profile code here to reconstruct full profile
+
+    
     #update data
     inputs[case.name]['zCL'] = case.zCL
 
