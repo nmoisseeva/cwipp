@@ -76,8 +76,9 @@ def plot_conservedvars(plume,T,pm):
 
     plt.figure()
     plt.title('CONSERVED VARIABLE PLOT: %s' %plume.name)
-    plt.scatter(Cp*Tctr/1000,PMctr/1000,c=plume.centerline/plume.zi, cmap = plt.cm.coolwarm,vmin=0,vmax=2,s=6)
+    plt.scatter(Cp*Tctr/1000,PMctr/1000,c=plume.centerline/plume.zi, cmap = plt.cm.BrBG,vmin=0,vmax=2,s=6)
     plt.gca().set(xlabel=r'dry static energy ($\theta \cdot C_p$) [kJ/kg]', ylabel='PM mixing ratio [mg/kg]')
+    plt.gca().invert_yaxis()
     plt.colorbar(label=r'$z/z_i$')
     plt.savefig(figpath + 'CTRmixing_%s.pdf' %plume.name)
     plt.close()

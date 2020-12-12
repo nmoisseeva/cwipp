@@ -8,17 +8,15 @@ import imp
 
 #import all common project variables
 import config
-imp.reload(config)
 import utils
-imp.reload(utils)
 import cwipp
-imp.reload(cwipp)
 import graphics
-imp.reload(graphics)
 
-
+#load inputs
 inputs = np.load(config.input_data,allow_pickle=True).item()
 
+
+#loop through all fires
 for fire in inputs:
     print('Processing fire: %s' %fire)
     case = cwipp.MODplume(fire)
@@ -26,16 +24,18 @@ for fire in inputs:
     case.I = inputs[case.name]['I']
     case.iterate(config.biasFit)
     case.classify()
-    # case.get_profile()
+
+    #update data
+    inputs[case.name]['zCL'] = case.zCL
+
     #temporary plot for sanity check
     plt.figure()
-    plt.plot(inputs[case.name]['truth'], config.interpZ)
-    plt.plot(case.sounding, config.interpZ)
-    # plt.plot(case.profile,config.interpZ)
-    plt.axhline(y = case.zCL)
+    plt.title('TRUE PROFILE cs MODEL GUESS')
+    plt.plot(inputs[case.name]['truth'], config.interpZ,color='grey', label='target smoke profile')
+    plt.axhline(y = case.zCL, color='C1', label='modelled injection height')
+    plt.gca().set(xlabel='smoke concentration', ylabel='height [m]')
+    plt.legend()
     plt.show()
-    #
-	# #write back to fires dictionary
-	# inputs[case.name]['profile'] = case.profile
 
-# np.save('output.npy',inputs, allow_pickle=True)
+#write back to fires dictionary
+np.save('output.npy',inputs, allow_pickle=True)
