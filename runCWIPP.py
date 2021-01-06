@@ -25,13 +25,12 @@ for fire in inputs:
     case.iterate(config.biasFit)
     case.classify()
 
-    #next step to incroporate vertical profile code here to reconstruct full profile
-
+    #FUTURE ADDITION: incroporate vertical profile code here to reconstruct full profile here
     
     #update data
     inputs[case.name]['zCL'] = case.zCL
-
-    #temporary plot for sanity check
+'''
+    #temporary plot for sanity check (use with sample_fires.npy)
     plt.figure()
     plt.title('TRUE PROFILE cs MODEL GUESS')
     plt.plot(inputs[case.name]['truth'], config.interpZ,color='grey', label='target smoke profile')
@@ -39,6 +38,6 @@ for fire in inputs:
     plt.gca().set(xlabel='smoke concentration', ylabel='height [m]')
     plt.legend()
     plt.show()
-
+'''
 #write back to fires dictionary
 np.save('output.npy',inputs, allow_pickle=True)

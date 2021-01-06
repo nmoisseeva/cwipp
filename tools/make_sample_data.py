@@ -19,4 +19,4 @@ for plume in all_plumes[:15]:
     fires[plume.name]['I'] = plume.I
     fires[plume.name]['truth'] = plume.profile
 
-np.save('fires.npy',fires, allow_pickle=True)
+np.save('sample_fires.npy',fires, allow_pickle=True)
