@@ -104,51 +104,6 @@ class Plume:
         self.THs = THs
 
 
-    def get_I(self, flux2D, length, *Us):
-        """
-        Finds cross-wind fireline intensity parameter I
-
-        Parameters
-        -----------
-        flux2D : ndarray
-            3D (time,y,x) or 2D (y,x) array containing heat flux values [kW m-2].
-        length : float
-            maximum cross-wind length of the fire over the entire timespan [m].
-        Us : float, optional
-            surface wind direction [deg, relative to y axis] NOT CURRENTLY IMPLEMENTED!
-
-        Returns
-        ---------
-        I : float
-            fireline intensity parameter [K m2 s-1]
-
-        """
-
-        #confirm there are sufficiant dimensions
-        dims = np.shape(flux2D)
-        if len(dims) > 3:
-            raise ValueError('Too many dimensions for heat flux data')
-        elif len(dims)<3:
-            raise ValueError('Too few dimensions: need 3D array (time,y,x)')
-
-        #mask and pad the heat source ------------------------
-        upwind_padding = int(length/config.dx)
-        downwind_padding = int(2000/config.dx)              #assumes ground is not heated beyont 1km downwind
-        masked_flux = ma.masked_less_equal(np.pad(flux2D,((0,0),(0,0),(upwind_padding,0)), 'constant',constant_values=0),1)
-
-        cs_flux = np.nanmean(masked_flux,1)                         #get mean cross section for each timestep
-        fire = []                                                   #create storage arrage
-        fxmax = np.argmax(cs_flux,axis=1)                           #get location of max heat for each timestep
-        for nP, pt in enumerate(fxmax[config.ign_over:]):            #excludes steps containing ignition
-            subset = cs_flux[config.ign_over+nP,pt-upwind_padding:pt+downwind_padding]     #set averaging window around a maximum
-            fire.append(subset)
-
-        meanFire = np.nanmean(fire,0)                               #calculate mean fire cross section
-        ignited = np.array([i for i in meanFire if i > 0.5])        #consider only cells that have heat flux about 500 W/m2
-        I = np.trapz(ignited, dx = config.dx) * 1000 / ( 1.2 * 1005)    #calculate Phi by integrating kinematic heat flux along x (Km2/s)
-
-        self.I = I
-
     def get_wf(self):
         """
 
@@ -197,6 +152,8 @@ class LESplume(Plume):
         1D vector corresponding to quasi-stationary downwind PM profile [concentration]
     quartiles : ndarray
         2D array with columns corresponding to Q1 and Q3 profiles [concentration]
+    I : float
+        fireline intensity parameter [K m2 s-1]
     zCL : float
         plume injection height [m]
     centerline: ndarray
@@ -207,6 +164,51 @@ class LESplume(Plume):
         ambient potential temperature at zCL [K]
 
     """
+
+    def get_I(self, flux, length, *Us):
+        """
+        Finds cross-wind fireline intensity parameter I
+
+        Parameters
+        -----------
+        flux : ndarray
+            3D (time,y,x) array containing heat flux values [kW m-2].
+        length : float
+            maximum cross-wind length of the fire over the entire timespan [m].
+        Us : float, optional
+            surface wind direction [deg, relative to y axis] NOT CURRENTLY IMPLEMENTED!
+
+        Returns
+        ---------
+        I : float
+            fireline intensity parameter [K m2 s-1]
+
+        """
+
+        #confirm there are sufficiant dimensions
+        dims = np.shape(flux)
+        if len(dims) > 3:
+            raise ValueError('Too many dimensions for heat flux data')
+        elif len(dims)<3:
+            raise ValueError('Too few dimensions: need 3D array (time,y,x)')
+
+        #mask and pad the heat source ------------------------
+        upwind_padding = int(length/config.dx)
+        downwind_padding = int(2000/config.dx)              #assumes ground is not heated beyont 1km downwind
+        masked_flux = ma.masked_less_equal(np.pad(flux,((0,0),(0,0),(upwind_padding,0)), 'constant',constant_values=0),1)
+
+        cs_flux = np.nanmean(masked_flux,1)                         #get mean cross section for each timestep
+        fire = []                                                   #create storage arrage
+        fxmax = np.argmax(cs_flux,axis=1)                           #get location of max heat for each timestep
+        for nP, pt in enumerate(fxmax[config.ign_over:]):            #excludes steps containing ignition
+            subset = cs_flux[config.ign_over+nP,pt-upwind_padding:pt+downwind_padding]     #set averaging window around a maximum
+            fire.append(subset)
+
+        meanFire = np.nanmean(fire,0)                               #calculate mean fire cross section
+        ignited = np.array([i for i in meanFire if i > 0.5])        #consider only cells that have heat flux about 500 W/m2
+        I = np.trapz(ignited, dx = config.dx) * 1000 / ( 1.2 * 1005)    #calculate Phi by integrating kinematic heat flux along x (Km2/s)
+
+        self.I = I
 
     def get_zCL(self, pm, **kwargs):
         """
@@ -361,7 +363,7 @@ class MODplume(Plume):
         Parameters
         ----------
         biasFit : array_like, optional
-            bias fit parameters. Default is m = 1, b = 0
+            bias fit parameters. If none provided defaults to m = 1, b = 0.
         argout: boolean, optional
             flag to output return arguments. If False(default) they are assigned as attributes
 
@@ -387,7 +389,6 @@ class MODplume(Plume):
         i_zCL = np.nanargmin(abs(config.interpZ - zCL))
 
         THzCL = self.sounding[i_zCL]
-
 
         if 'argout' in kwargs.keys():
             if kwargs['argout']:
@@ -424,6 +425,8 @@ class MODplume(Plume):
 
         self.zCL = zCL
 
+'''
+FUTURE DEVELOPMENT:
     def get_profile(self):
         """
         Parameterization of the full normalized vertical smoke profile
@@ -465,3 +468,4 @@ class MODplume(Plume):
             profile[:izCL+1] = np.exp(-0.5*((config.interpZ[:izCL+1] - self.zCL)/sigma_bottom)**2)
 
             self.profile = profile
+'''

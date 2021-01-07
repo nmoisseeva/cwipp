@@ -36,9 +36,7 @@ dx = 40.
 dy = 40.
 
 #which runs to process
-
 exclude_runs = ['W5F4R0','W5F9R1','W5F8R3','W5F9R3','W5F1R3','W5F13R0','W5F1R7T','W5F8R7T','W5F9R7T']
-exclude_bad = ['W5F4R0','W5F13R0']
 
 #fireline configuration
 ign_over = 20                   #number of history intervals exluded from analysis start (corresponding to ignition)

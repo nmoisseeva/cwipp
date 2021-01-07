@@ -27,9 +27,9 @@ imp.reload(cwipp)
 import graphics
 imp.reload(graphics)
 
-RunList = [i for i in config.tag if i not in config.exclude_bad]         #load a list of cases
-runCnt = len(RunList)                                                  #count number of cases
-# exclude_runs = ['W5F9R1','W5F8R3','W5F9R3','W5F1R3','W5F1R7T','W5F8R7T','W5F9R7T']
+RunList = [i for i in config.tag]         #load a list of cases
+runCnt = len(RunList)                      #count number of cases
+
 #======================perform main analysis for all runs first===================
 print('==========================LES analysis==========================')
 #loop through all LES cases
@@ -42,7 +42,7 @@ for nCase,Case in enumerate(RunList):
 
     #calculate sounding-related variables
     T0 = np.load(config.wrfdir + 'profiles/profT0' + plume.name + '.npy')
-    plume.get_sounding(T0) #!!!!! NEED TO TEST THIS
+    plume.get_sounding(T0)
 
     #get quasi-stationary profile
     pm = ma.masked_where(csdict['pm25'][-1,:,:] <= config.PMcutoff, csdict['pm25'][-1,:,:] ) #mask all non-plume cells
@@ -86,12 +86,6 @@ zPrimeGuess, zPrimeTrue  = [],[]
 for plume in penetrative_plumes:
     zPrimeGuess.append(plume.Tau * plume.wf)
     zPrimeTrue.append(plume.zCL - plume.zs)
-
-# #obtain empirical parameter C
-# firstGuess = np.array(zPrimeGuess)[:,np.newaxis]
-# C, _, _, _ = np.linalg.lstsq(firstGuess, zPrimeTrue)
-# C = float(C)
-# C = 1
 
 #obtain bias correction factors
 zCLmodel, zCLtrue = [],[]
@@ -179,7 +173,6 @@ graphics.dimensionless_groups(HStar,zStar,cI)
 
 #plot bias correction statistics on explicit solution
 graphics.bias_correction(raw_error, unbiased_error, true_zCL, figname='ExplicitSolution')
-#####STOPPED TESTING HERE
 #======================train and test regression model===================
 
 #create storage arrays for R values, modelled zCL, model error and trail subsets of true zCL derived from data
@@ -201,9 +194,11 @@ for nTrial in range(config.trials):
 
     test_error, test_truth, fuel_cat = [], [], []
     for nTest in TestSet:
+        T0 = np.load(config.wrfdir + 'profiles/profT0' + penetrative_plumes[nTest].name + '.npy')
         testPlume = cwipp.MODplume(penetrative_plumes[nTest].name)
         testPlume.I = penetrative_plumes[nTest].I
-        test_estimate, TH_dump = testPlume.iterate(trialFit, argout=True)              #####STOPPPED HERE: NEED TO ADD POLYMORPHISM, TO PROVIDE OUTPUT TO FUNCITON (instead of assigning attributes)
+        testPlume.get_sounding(T0)
+        test_estimate, TH_dump = testPlume.iterate(trialFit, argout=True)
         truth = penetrative_plumes[nTest].zCL
         test_truth.append(truth)
         test_error.append(truth - test_estimate)

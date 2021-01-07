@@ -15,6 +15,10 @@ from matplotlib import gridspec
 
 
 def plot_profiles(plume, interpZ, w, T):
+    """
+    Profiles of maximum in-plume vertical velocity and temperature
+    """
+
     dimZ, dimX = np.shape(w)     #get shape of data
     metlvls = np.arange(0,dimZ*config.dz,config.dz)
 
@@ -59,7 +63,9 @@ def plot_profiles(plume, interpZ, w, T):
     plt.close()
 
 def plot_conservedvars(plume,T,pm):
-
+    """
+    Conserved variable (dry static energy and concentration) plot
+    """
     Cp = 1005
     dimZ, dimX = np.shape(pm)     #get shape of data
 
@@ -84,7 +90,9 @@ def plot_conservedvars(plume,T,pm):
     plt.close()
 
 def plot_zcl(plume,pm,fireCS,flux2D,stablePMmask,smoothCenterline):
-
+    """
+    CWI smoke injection height estimation
+    """
     dimZ, dimX = np.shape(pm)     #get shape of data
     pmlvls = np.arange(0,dimZ*config.dz,config.dz)
     cropX = int(dimX*0.75)
@@ -161,7 +169,9 @@ def plot_zcl(plume,pm,fireCS,flux2D,stablePMmask,smoothCenterline):
 
 
 def plot_soundings(all_plumes):
-
+    """
+    Potential temperature soundings from LES runs
+    """
     #create a storage directory for plots
     figpath = config.figdir + 'injection/'
     if not os.path.exists(figpath):
@@ -188,7 +198,9 @@ def plot_soundings(all_plumes):
 
 
 def injection_model(all_plumes,biasFit):
-
+    """
+    Model performance scatter plot using LES data
+    """
     #create a storage directory for plots
     figpath = config.figdir + 'injection/'
     if not os.path.exists(figpath):
@@ -217,6 +229,9 @@ def injection_model(all_plumes,biasFit):
     plt.close()
 
 def dimensionless_groups(HStar,zStar,cI):
+    """
+    Dimensionless groups obtains through explicit solution
+    """
     #create a storage directory for plots
     figpath = config.figdir + 'injection/'
     if not os.path.exists(figpath):
@@ -236,7 +251,9 @@ def dimensionless_groups(HStar,zStar,cI):
     plt.close()
 
 def bias_correction(raw_error, unbiased_error, true_zCL, figname='BiasCorrection'):
-
+    """
+    Bias correction with LES data
+    """
     #create a storage directory for plots
     figpath = config.figdir + 'injection/'
     if not os.path.exists(figpath):
@@ -272,7 +289,9 @@ def bias_correction(raw_error, unbiased_error, true_zCL, figname='BiasCorrection
     plt.close()
 
 def model_sensitivity(ModelError,flatModelError,Rstore):
-
+    """
+    Cross-validation and model sensitivity analysis with LES
+    """
     #create a storage directory for plots
     figpath = config.figdir + 'injection/'
     if not os.path.exists(figpath):
@@ -303,7 +322,9 @@ def model_sensitivity(ModelError,flatModelError,Rstore):
     plt.close()
 
 def fuel_error(flatTrialFuel,flatModelError,flatTrialZcl):
-
+    """
+    Model error as a function of fuel category
+    """
     #create a storage directory for plots
     figpath = config.figdir + 'injection/'
     if not os.path.exists(figpath):

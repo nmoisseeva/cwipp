@@ -1,0 +1,282 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Optimization with LES Data &mdash; CWIPP October 2020 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="graphics.fuel_error" href="graphics.fuel_error.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> CWIPP
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">How To Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="graphics.html">Plotting Functions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Optimization with LES Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-for-les-optimization">Configuration for LES Optimization</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">CWIPP</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Optimization with LES Data</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/LES.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="optimization-with-les-data">
+<span id="les"></span><h1>Optimization with LES Data<a class="headerlink" href="#optimization-with-les-data" title="Permalink to this headline">¶</a></h1>
+<p>The main routine contained in <code class="docutils literal notranslate"><span class="pre">runLESanalysis.py</span></code> performs model optimization and bias correction using Large Eddy Simulation (LES) data from WRF-SFIRE. This routine is not required for running the plume rise model in predictive mode. Default bias parameters stored in <code class="docutils literal notranslate"><span class="pre">config.py</span></code> will be sourced for all general cases.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Running this part of the code requires access to interpolated cross-sectional data from WRF-SFIRE generated synthetic plumes.</p>
+<p>Raw synthetic data used for development and optimization of this model can be obtained from:
+Moisseeva, N. , Stull, R. (2020) WRF-SFIRE LES Synthetic Wildfire Plume Dataset. Federated Research Data Repository. <a class="reference external" href="https://doi.org/10.20383/102.0314">https://doi.org/10.20383/102.0314</a></p>
+<p class="last">Sample code for interpolating and cross-sectioning raw files can be found in:
+<code class="docutils literal notranslate"><span class="pre">./tools/interpolate_make_crosssect.py</span></code></p>
+</div>
+<div class="section" id="configuration-for-les-optimization">
+<h2>Configuration for LES Optimization<a class="headerlink" href="#configuration-for-les-optimization" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="colwidths-given docutils" id="config-les-table">
+<colgroup>
+<col width="30%" />
+<col width="10%" />
+<col width="60%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameter</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><strong>trials</strong></td>
+<td>int</td>
+<td>number of boot-strapping trials</td>
+</tr>
+<tr class="row-odd"><td><strong>testPortion</strong></td>
+<td>float</td>
+<td>fraction of data to reserve for independent verification</td>
+</tr>
+<tr class="row-even"><td><strong>wrfdir</strong></td>
+<td>str</td>
+<td>path to interpolated cross-sectional plume data</td>
+</tr>
+<tr class="row-odd"><td><strong>filename</strong></td>
+<td>str</td>
+<td>naming pattern for LES data</td>
+</tr>
+<tr class="row-even"><td><strong>exclude_runs</strong></td>
+<td>list of str</td>
+<td>runs to exclude from analysis</td>
+</tr>
+<tr class="row-odd"><td><strong>dz</strong></td>
+<td>int</td>
+<td>vertical level spacing of LES data</td>
+</tr>
+<tr class="row-even"><td><strong>dx</strong></td>
+<td>int</td>
+<td>grids spacing of LES data in x-direction</td>
+</tr>
+<tr class="row-odd"><td><strong>dy</strong></td>
+<td>int</td>
+<td>grids spacing of LES data in y-direction</td>
+</tr>
+<tr class="row-even"><td><strong>ign_over</strong></td>
+<td>int</td>
+<td>number of history intervals to exclude from analysis start</td>
+</tr>
+<tr class="row-odd"><td><strong>plot_profiles</strong></td>
+<td>boolean</td>
+<td>flag to plot profiles</td>
+</tr>
+<tr class="row-even"><td><strong>plot_conservedvars</strong></td>
+<td>boolean</td>
+<td>flag to make conserved variable plots</td>
+</tr>
+<tr class="row-odd"><td><strong>plot_zcl</strong></td>
+<td>boolean</td>
+<td>flag to make injection height plots</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="graphics.fuel_error.html" class="btn btn-neutral float-left" title="graphics.fuel_error" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Nadya Moisseeva
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
