@@ -1,5 +1,4 @@
 # cwipp
-==========================
 
 Cross-Wind Integrated Plume Penetration (CWIPP) model is an analytical method for predicting the vertical distribution of smoke in the atmosphere above a wildfire.
 
@@ -19,7 +18,7 @@ Full documentation is here: https://nmoisseeva.github.io/cwipp/
 
 # License
 
-[MIT License](https://github.com/nmoisseeva/cwipp/LICENSE)
+[MIT License](https://github.com/nmoisseeva/cwipp/blob/main/LICENSE)
 
 # Contact
 Nadya Moisseeva nmoisseeva@eoas.ubc.ca
