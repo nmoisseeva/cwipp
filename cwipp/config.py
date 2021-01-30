@@ -10,19 +10,18 @@ import glob
 
 #----------------------common settings----------------
 #vertical level settings
-zstep = 20                      #height interpolation step for analysis
+dz = 40                         #vertical step in sounding data (in meters)
+zstep = 20                      #height interpolation step for analysis (in meteres)
 interpZ = np.arange(0, 4001, zstep)     #set up interpolated vertical profile
 BLfrac = 0.75                   #fraction of BL height to use as reference height z_s (default = 0.75)
 
-#common analysis variables
-PMcutoff = 20                   #minimum PM value to define plume edge
 
 #default model bias fit parameters
 biasFit = [0.9195, 137.9193]
 
 #figure storage directory
 figdir = '/Users/nmoisseeva/code/pr_model/figs/'
-input_data = '/Users/nmoisseeva/code/pr_model/sample_fires.npy'
+input_data = '/Users/nmoisseeva/code/cwipp/cwipp/sample_plumes.npy'
 
 #---------------------LES mode settings----------------
 
@@ -31,12 +30,14 @@ wrfdir = '/Users/nmoisseeva/data/plume/main/interp/'
 filename = 'wrfcs_*'
 
 #grid spacing of interpolated LES data
-dz = 40
 dx = 40.
 dy = 40.
 
 #which runs to process
 exclude_runs = ['W5F4R0','W5F9R1','W5F8R3','W5F9R3','W5F1R3','W5F13R0','W5F1R7T','W5F8R7T','W5F9R7T']
+
+#plume masking
+PMcutoff = 20                   #minimum PM value to define plume edge
 
 #fireline configuration
 ign_over = 20                   #number of history intervals exluded from analysis start (corresponding to ignition)
