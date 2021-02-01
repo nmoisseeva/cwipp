@@ -33,6 +33,7 @@ for fire in inputs:
 
     #update data
     inputs[case.name]['zCL'] = case.zCL
+    inputs[case.name]['penetrative'] = case.penetrative
 
 '''
     #temporary plot for sanity check for mesoWRF
@@ -56,9 +57,6 @@ for fire in inputs:
     plt.legend()
     plt.show()
 '''
-
-
-
 
 
 #write back to fires dictionary

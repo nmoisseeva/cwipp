@@ -86,6 +86,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">How To Use</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#input-data">Input Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#configuration-settings">Configuration Settings</a></li>
 </ul>
 </li>
@@ -169,9 +170,28 @@
 </div>
 <div class="section" id="basic-usage">
 <span id="id1"></span><h2>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">runCWIPP.py</span></code> contains sample code for applying the CWIPP model in a forecast setting to predict the vertical smoke profile of a real-world wildfire plume</p>
+<p><code class="docutils literal notranslate"><span class="pre">runCWIPP.py</span></code> contains sample code for applying the CWIPP model in a forecast setting to predict the vertical smoke profile of a real-world wildfire plume.</p>
 <p>Key configuration setting for this analysis are contained in <code class="docutils literal notranslate"><span class="pre">config.py</span></code>. Their descriptions are summarized in Configuration Settings below.</p>
+</div>
+<div class="section" id="input-data">
+<h2>Input Data<a class="headerlink" href="#input-data" title="Permalink to this headline">¶</a></h2>
 <p>Sample data for testing can be found in <code class="docutils literal notranslate"><span class="pre">sample_fires.npy</span></code>.</p>
+<p>The model expects dictionary input, where each case is identified by plume name/ID (string). Each plume in the parent input dictionary is also a dictionary, containing information fireline intensity <code class="docutils literal notranslate"><span class="pre">I</span></code> and vertical potential temperature profile <code class="docutils literal notranslate"><span class="pre">sounding</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inputs</span><span class="p">[</span><span class="n">case</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+<span class="go">{&#39;sounding&#39;: array([...]),</span>
+<span class="go">&#39;I&#39;: float,</span>
+<span class="go">&#39;zCL&#39;: float}</span>
+</pre></div>
+</div>
+<p>After successful completion of <code class="docutils literal notranslate"><span class="pre">runCWIPP.py</span></code> the same dictionary is appended with two additional keys (modelled mean injection height <code class="docutils literal notranslate"><span class="pre">zCL</span></code> and classification <code class="docutils literal notranslate"><span class="pre">penetrative</span></code>) and saved as <code class="docutils literal notranslate"><span class="pre">output.npy</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inputs</span><span class="p">[</span><span class="n">case</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+<span class="go">{&#39;sounding&#39;: array([...]),</span>
+<span class="go">&#39;I&#39;: float,</span>
+<span class="go">&#39;zCL&#39;: float,</span>
+<span class="go">&#39;zCL&#39;: float,</span>
+<span class="go">&#39;penetrative&#39;: boolean}</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="configuration-settings">
 <h2>Configuration Settings<a class="headerlink" href="#configuration-settings" title="Permalink to this headline">¶</a></h2>
@@ -192,21 +212,21 @@
 <td>dict</td>
 <td>input information about fires (id, soundings, intensity)</td>
 </tr>
-<tr class="row-odd"><td><strong>zstep</strong></td>
+<tr class="row-odd"><td><strong>dz</strong></td>
 <td>int</td>
-<td>height interpolation step for analysis</td>
+<td>vertical step (in meters) between sounding levels</td>
 </tr>
-<tr class="row-even"><td><strong>interpZ</strong></td>
+<tr class="row-even"><td><strong>zstep</strong></td>
+<td>int</td>
+<td>height interpolation step for analysis (in meters)</td>
+</tr>
+<tr class="row-odd"><td><strong>interpZ</strong></td>
 <td>1D array</td>
 <td>vector corresponding to vertical levels for analysis</td>
 </tr>
-<tr class="row-odd"><td><strong>BLfrac</strong></td>
+<tr class="row-even"><td><strong>BLfrac</strong></td>
 <td>float</td>
 <td>fraction of BL height to use as reference height z_s (default = 0.75)</td>
-</tr>
-<tr class="row-even"><td><strong>PMcutoff</strong></td>
-<td>float</td>
-<td>minimum PM value to define plume edge</td>
 </tr>
 <tr class="row-odd"><td><strong>biasFit</strong></td>
 <td>list</td>

@@ -18,6 +18,7 @@ The main routine contained in ``runLESanalysis.py`` performs model optimization 
 
 Configuration for LES Optimization
 ----------------------------------
+
 .. _config-les-table:
 
 
@@ -43,15 +44,15 @@ Configuration for LES Optimization
   * - **exclude_runs**
     - list of str
     - runs to exclude from analysis
-  * - **dz**
-    - int
-    - vertical level spacing of LES data
   * - **dx**
     - int
     - grids spacing of LES data in x-direction
   * - **dy**
     - int
     - grids spacing of LES data in y-direction
+  * - **PMcutoff**
+    - float
+    - minimum PM value to define plume edge
   * - **ign_over**
     - int
     - number of history intervals to exclude from analysis start

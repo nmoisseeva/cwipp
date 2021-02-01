@@ -6,6 +6,8 @@ Plotting Functions
 
 The following graphical functions are included in ``graphics.py`` module.
 
+.. currentmodule:: graphics
+
 .. autosummary::
    :nosignatures:
    :toctree:
